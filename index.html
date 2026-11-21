@@ -217,6 +217,7 @@ footer strong { color: var(--gold-hi); font-weight: 600; }
 
 .notice { background: linear-gradient(180deg, #fff0a8, #e0a937 60%, #f0c95e); color: var(--ink); text-align: center; font: 600 14px/1.4 var(--f-body); padding: 10px 0; border-bottom: 1px solid #7a4f0c; box-shadow: 0 4px 10px rgba(0, 0, 0, .4); }
 .notice p { margin: 0; }
+.info dd { white-space: pre-line; }
 .postlist { display: flex; flex-direction: column; gap: 14px; }
 .news p { white-space: pre-line; overflow-wrap: anywhere; }
 .news time { font-size: 13px; color: var(--muted); }
@@ -289,7 +290,7 @@ footer strong { color: var(--gold-hi); font-weight: 600; }
       <span class="rule" aria-hidden="true"><span class="line"></span><span class="dia"></span><span class="line"></span></span>
       <span class="name gold" id="siteName">Jean Mendes</span>
     </h1>
-    <p class="pill">Advogado 24 horas</p>
+    <p class="pill" id="siteHours">Advogado 24 horas</p>
     <p class="lead" id="siteIntro">OAB-GO 58.257. Atendimento em Goiatuba, Goiás.</p>
     <div class="hero-actions">
       <a class="btn btn-gold" data-wa="1" href="https://wa.me/5564984022777?text=Ol%C3%A1%2C%20Dr.%20Jean.%20Vim%20pelo%20site." target="_blank" rel="noopener">
@@ -348,7 +349,7 @@ footer strong { color: var(--gold-hi); font-weight: 600; }
       <span class="rule" aria-hidden="true"><span class="line"></span><span class="dia"></span><span class="line"></span></span>
     </div>
     <div class="card contact">
-      <p style="margin:0">Atendimento 24 horas. Chame no WhatsApp e conte o seu caso.</p>
+      <p style="margin:0">Chame no WhatsApp e conte o seu caso.</p>
       <div class="btns">
         <a class="btn btn-gold" data-wa="1" href="https://wa.me/5564984022777?text=Ol%C3%A1%2C%20Dr.%20Jean.%20Vim%20pelo%20site." target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.4-4.2A8 8 0 1 1 8.4 18.6z"/><path d="M9 9.5c.3 2 2.2 3.9 4.5 4.5l1.3-1.2-1.8-1-.8.7c-.6-.3-1.3-1-1.6-1.6l.7-.8-1-1.8z"/></svg>
@@ -360,6 +361,7 @@ footer strong { color: var(--gold-hi); font-weight: 600; }
         </a>
       </div>
       <dl class="info">
+        <div id="hoursRow"><dt>Horário de atendimento</dt><dd id="hoursFull">Atendimento 24 horas</dd></div>
         <div><dt>Telefones</dt><dd id="phones">(64) 98402-2777 · (64) 98127-2777</dd></div>
         <div><dt>Endereço</dt><dd>Rua Minas Gerais, 471A, Centro, Goiatuba, Goiás, CEP 75600-000</dd></div>
         <div><dt>Facebook</dt><dd>Jean Mendes Adv</dd></div>
@@ -408,6 +410,11 @@ footer strong { color: var(--gold-hi); font-weight: 600; }
       $('#notice').hidden = !nt;
       if ((s.title || '').trim()) $('#siteName').textContent = s.title.trim();
       if ((s.intro || '').trim()) $('#siteIntro').textContent = s.intro.trim();
+      var hr = (s.hours || '').trim();
+      $('#hoursFull').textContent = hr;
+      $('#hoursRow').hidden = !hr;
+      $('#siteHours').textContent = hr.split('\n')[0];
+      $('#siteHours').hidden = !hr;
       var nums = [s.whatsapp1, s.whatsapp2];
       var q = '?text=' + encodeURIComponent('Olá, Dr. Jean. Vim pelo site.');
       all('[data-wa]').forEach(function (a) {

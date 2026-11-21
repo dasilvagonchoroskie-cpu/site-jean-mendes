@@ -303,6 +303,11 @@ select option { color: var(--field-ink); background: var(--field); }
       <textarea id="txtIntro">OAB-GO 58.257. Atendimento em Goiatuba, Goiás.</textarea>
     </div>
     <div class="field">
+      <label for="txtHours">Horário de atendimento</label>
+      <textarea id="txtHours" placeholder="Ex.: Segunda a sexta, das 8h às 18h&#10;Sábado, das 8h às 12h&#10;Plantão 24 horas pelo WhatsApp"></textarea>
+      <p class="hint">Escreva um horário por linha. A primeira linha também aparece no topo do site. Deixe vazio para esconder.</p>
+    </div>
+    <div class="field">
       <label for="txtWa1">WhatsApp principal (só números, com 55 e DDD)</label>
       <input type="text" id="txtWa1" inputmode="numeric" value="5564984022777">
     </div>
@@ -506,6 +511,7 @@ select option { color: var(--field-ink); background: var(--field); }
       $('#txtNotice').value = s.notice || '';
       $('#txtTitle').value = s.title || '';
       $('#txtIntro').value = s.intro || '';
+      $('#txtHours').value = s.hours || '';
       $('#txtWa1').value = s.whatsapp1 || '';
       $('#txtWa2').value = s.whatsapp2 || '';
     });
@@ -664,6 +670,7 @@ select option { color: var(--field-ink); background: var(--field); }
     $('#txtWa1').value = wa1;
     $('#txtWa2').value = wa2;
     if (!$('#txtTitle').value.trim()) { msg('#txtMsg', 'O nome em destaque não pode ficar vazio.', 'err'); return; }
+    if ($('#txtHours').value.trim().length > 300) { msg('#txtMsg', 'O horário de atendimento está muito longo. Use no máximo 300 letras.', 'err'); return; }
     if (!waOk(wa1)) { msg('#txtMsg', 'O WhatsApp principal precisa ter só números, começando com 55 e o DDD. Exemplo: 5564984022777.', 'err'); return; }
     if (wa2 && !waOk(wa2)) { msg('#txtMsg', 'O segundo WhatsApp precisa ter só números, começando com 55 e o DDD, ou ficar vazio.', 'err'); return; }
     msg('#txtMsg', 'Salvando...');
@@ -671,6 +678,7 @@ select option { color: var(--field-ink); background: var(--field); }
       notice: $('#txtNotice').value.trim(),
       title: $('#txtTitle').value.trim(),
       intro: $('#txtIntro').value.trim(),
+      hours: $('#txtHours').value.trim(),
       whatsapp1: wa1,
       whatsapp2: wa2,
       updated_at: new Date().toISOString()
