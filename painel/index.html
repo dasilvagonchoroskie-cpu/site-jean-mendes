@@ -1,0 +1,712 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#032e35">
+<meta name="robots" content="noindex, nofollow">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Painel Jean">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Painel Jean Mendes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Inter:wght@400;500;600&display=swap">
+<style>
+/* Concept: same turquoise and gold 3D world as the public site, with the Painel Move structure (header, three tabs, white-ish inputs for easy typing). Single committed dark look. */
+:root {
+  --teal-deep: #032e35;
+  --teal: #0a7480;
+  --gold-hi: #fff3b8;
+  --gold: #e8b94a;
+  --gold-lo: #8c5c10;
+  --ink: #3a2403;
+  --field: #effbfb;
+  --field-ink: #02242a;
+  --text: #e8fbfb;
+  --muted: #a9d6d9;
+  --danger: #d3382b;
+  --f-display: 'Cinzel', Georgia, 'Times New Roman', serif;
+  --f-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background-color: var(--teal-deep);
+  background-image:
+    radial-gradient(120% 55% at 15% 0%, rgba(31, 224, 224, .38), transparent 60%),
+    radial-gradient(90% 45% at 100% 38%, rgba(31, 224, 224, .2), transparent 65%),
+    linear-gradient(180deg, #05555f 0%, #033a43 45%, #021f24 100%);
+  color: var(--text);
+  font-family: var(--f-body);
+  font-size: 15px;
+  line-height: 1.55;
+  padding-bottom: 40px;
+}
+.bg { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+.bg svg { display: block; width: 100%; height: 100%; }
+.bg .goldline { filter: drop-shadow(0 0 5px rgba(255, 214, 110, .8)); }
+.wrap {
+  width: 100%; max-width: 640px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+:focus-visible { outline: 3px solid var(--gold-hi); outline-offset: 3px; }
+h1, h2, h3 { margin: 0; }
+.gold-txt { color: var(--gold-hi); text-shadow: 0 2px 0 rgba(0, 0, 0, .5), 0 6px 10px rgba(0, 0, 0, .4); }
+
+/* buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 52px; padding: 12px 24px; border-radius: 14px; border: 1px solid transparent; cursor: pointer;
+  font: 600 16px/1.2 var(--f-body); text-align: center; text-decoration: none;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.btn-small { min-height: 42px; padding: 8px 18px; font-size: 14px; border-radius: 12px; }
+.btn-gold {
+  color: var(--ink); border-color: #ffe9a0;
+  background: linear-gradient(180deg, #fff0a8 0%, #f2cb5a 38%, #d49a2c 62%, #f0c95e 100%);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, .6);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .75), inset 0 -3px 4px rgba(120, 76, 8, .45), 0 5px 0 #7a4f0c, 0 12px 18px rgba(0, 0, 0, .45);
+}
+.btn-gold:active { transform: translateY(4px); box-shadow: inset 0 2px 0 rgba(255, 255, 255, .75), inset 0 -3px 4px rgba(120, 76, 8, .45), 0 1px 0 #7a4f0c, 0 6px 10px rgba(0, 0, 0, .4); }
+.btn-glass {
+  color: var(--gold-hi); border-color: rgba(240, 201, 94, .75);
+  background: linear-gradient(180deg, rgba(255, 255, 255, .17), rgba(31, 224, 224, .1) 45%, rgba(2, 31, 36, .55));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .4), inset 0 -2px 6px rgba(0, 0, 0, .35), 0 5px 0 rgba(2, 31, 36, .95), 0 10px 16px rgba(0, 0, 0, .4);
+}
+.btn-glass:active { transform: translateY(4px); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .4), inset 0 -2px 6px rgba(0, 0, 0, .35), 0 1px 0 rgba(2, 31, 36, .95), 0 4px 8px rgba(0, 0, 0, .4); }
+.btn-danger {
+  color: #fff; border-color: #ffb3a8;
+  background: linear-gradient(180deg, #ff8f80 0%, #e0493b 45%, #b92a1e 100%);
+  text-shadow: 0 1px 0 rgba(90, 10, 0, .6);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .5), inset 0 -3px 4px rgba(90, 10, 0, .45), 0 5px 0 #7d1d14, 0 10px 16px rgba(0, 0, 0, .4);
+}
+.btn-danger:active { transform: translateY(4px); box-shadow: inset 0 2px 0 rgba(255, 255, 255, .5), 0 1px 0 #7d1d14, 0 4px 8px rgba(0, 0, 0, .4); }
+
+/* header */
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 16px; }
+.brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.logo {
+  flex: none; width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center;
+  font: 800 21px/1 var(--f-display); color: var(--gold-hi); text-shadow: 0 1px 0 #5c3a06;
+  background: linear-gradient(160deg, #12a2aa, #043640 70%); border: 1.5px solid var(--gold);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .4), inset 0 -6px 10px rgba(0, 0, 0, .45), 0 5px 10px rgba(0, 0, 0, .5);
+}
+.brand-text { display: flex; flex-direction: column; min-width: 0; }
+.brand-text strong { font: 800 19px/1.2 var(--f-display); color: var(--gold-hi); text-shadow: 0 2px 0 rgba(0, 0, 0, .5); }
+.brand-text small { font: 600 11px/1.2 var(--f-display); letter-spacing: .22em; text-transform: uppercase; color: var(--gold); }
+
+.note {
+  margin: 0 0 14px; padding: 8px 14px; border-radius: 12px; font-size: 13px; color: var(--muted);
+  background: rgba(2, 31, 36, .55); border: 1px dashed rgba(240, 201, 94, .5);
+}
+
+/* tabs */
+.tabs { display: flex; gap: 10px; overflow-x: auto; padding: 4px 2px 14px; margin: 0; list-style: none; }
+.tab {
+  flex: none; min-height: 46px; padding: 8px 20px; border-radius: 999px; cursor: pointer;
+  font: 600 15px/1.2 var(--f-body); color: var(--text);
+  background: linear-gradient(180deg, rgba(255, 255, 255, .16), rgba(2, 31, 36, .5));
+  border: 1px solid rgba(240, 201, 94, .45);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35), 0 4px 0 rgba(2, 31, 36, .9), 0 8px 12px rgba(0, 0, 0, .35);
+}
+.tab[aria-selected="true"] {
+  color: var(--ink); border-color: #ffe9a0;
+  background: linear-gradient(180deg, #fff0a8, #e0a937 60%, #f0c95e);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .7), inset 0 -2px 3px rgba(120, 76, 8, .4), 0 4px 0 #7a4f0c, 0 8px 12px rgba(0, 0, 0, .4);
+}
+
+/* cards */
+.card {
+  position: relative; border-radius: 20px; padding: 20px;
+  background: linear-gradient(155deg, rgba(255, 255, 255, .14) 0%, rgba(31, 224, 224, .13) 28%, rgba(3, 46, 53, .92) 100%);
+  border: 1px solid rgba(240, 201, 94, .55);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .4), inset 0 -14px 24px rgba(0, 0, 0, .28), 0 16px 30px rgba(0, 0, 0, .5), 0 2px 0 rgba(0, 0, 0, .4);
+}
+.panel { display: flex; flex-direction: column; gap: 18px; }
+.panel > .btn { align-self: flex-start; }
+.panel h2 { font: 800 24px/1.2 var(--f-display); letter-spacing: .04em; color: var(--gold-hi); text-shadow: 0 2px 0 rgba(0, 0, 0, .5); }
+.panel h3, .item h3 { font: 700 17px/1.3 var(--f-body); color: var(--text); overflow-wrap: anywhere; }
+.sub { margin: 0; color: var(--muted); font-size: 14px; }
+.inner {
+  display: flex; flex-direction: column; gap: 14px; padding: 16px; border-radius: 16px;
+  background: rgba(2, 31, 36, .55); border: 1px solid rgba(240, 201, 94, .4);
+  box-shadow: inset 0 4px 10px rgba(0, 0, 0, .45);
+}
+
+/* form */
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+label, .lbl { font: 600 14px/1.35 var(--f-body); color: var(--gold-hi); }
+.hint { margin: 0; font-size: 13px; color: var(--muted); }
+input[type="text"], input[type="password"], textarea, select {
+  width: 100%; min-height: 50px; padding: 12px 14px; border-radius: 12px;
+  border: 1px solid rgba(240, 201, 94, .65); background: var(--field); color: var(--field-ink);
+  font: 400 16px/1.4 var(--f-body);
+  box-shadow: inset 0 3px 6px rgba(2, 31, 36, .35), 0 1px 0 rgba(255, 255, 255, .3);
+}
+textarea { min-height: 110px; resize: vertical; }
+::placeholder { color: #5b8388; }
+select option { color: var(--field-ink); background: var(--field); }
+.check { display: flex; align-items: center; gap: 12px; min-height: 44px; font: 500 15px/1.3 var(--f-body); color: var(--text); }
+.check input { width: 24px; height: 24px; accent-color: #e8b94a; flex: none; }
+.row { display: flex; flex-wrap: wrap; gap: 12px; }
+.msg { margin: 0; padding: 10px 14px; border-radius: 12px; font-size: 14px; font-weight: 500; }
+.msg:empty { display: none; }
+.msg.ok { color: #05361c; background: linear-gradient(180deg, #c9f7da, #7fdca1); }
+.msg.err { color: #5a0d06; background: linear-gradient(180deg, #ffd9d3, #ff9f92); }
+
+/* lists */
+.list { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
+.item { display: flex; flex-direction: column; gap: 8px; padding: 16px 0; border-top: 1px solid rgba(240, 201, 94, .3); min-width: 0; }
+.item:first-child { border-top: 0; padding-top: 4px; }
+.item p { margin: 0; color: var(--muted); font-size: 14px; overflow-wrap: anywhere; }
+.badges { display: flex; flex-wrap: wrap; gap: 8px; }
+.badge { padding: 4px 12px; border-radius: 999px; font: 700 11px/1.2 var(--f-body); letter-spacing: .08em; text-transform: uppercase; }
+.badge.on { color: #05361c; background: linear-gradient(180deg, #c9f7da, #5fd18a); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7), 0 2px 0 #1d6b3d; }
+.badge.star { color: var(--ink); background: linear-gradient(180deg, #fff0a8, #d49a2c); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7), 0 2px 0 #7a4f0c; }
+.badge.off { color: var(--text); background: rgba(255, 255, 255, .18); box-shadow: 0 2px 0 rgba(0, 0, 0, .4); }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding-bottom: 6px; }
+.ask { font-weight: 600; color: var(--gold-hi); font-size: 14px; }
+.empty { margin: 0; color: var(--muted); }
+
+/* login */
+.login { min-height: 100%; display: flex; flex-direction: column; align-items: center; gap: 18px; padding-block: 28px; text-align: center; }
+.login .mono { width: clamp(120px, 34vw, 160px); filter: drop-shadow(0 2px 0 #5c3a06) drop-shadow(0 8px 10px rgba(0, 0, 0, .55)); }
+.login .mono svg { display: block; width: 100%; height: auto; overflow: visible; }
+.login h1 { font: 800 clamp(24px, 7vw, 32px)/1.15 var(--f-display); letter-spacing: .06em; }
+.login .card { width: 100%; text-align: left; }
+.login form { display: flex; flex-direction: column; gap: 16px; }
+
+@media (prefers-reduced-motion: reduce) { .btn { transition: none; } }
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true">
+  <svg viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="wv1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22f0ef" stop-opacity=".5"/><stop offset="1" stop-color="#0a7480" stop-opacity=".05"/></linearGradient>
+      <linearGradient id="wv2" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1fe0e0" stop-opacity=".32"/><stop offset="1" stop-color="#021f24" stop-opacity="0"/></linearGradient>
+      <linearGradient id="goldrib" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8c5c10"/><stop offset=".3" stop-color="#fff3b8"/><stop offset=".6" stop-color="#e8b94a"/><stop offset="1" stop-color="#8c5c10"/></linearGradient>
+    </defs>
+    <path d="M-20 260 C 60 120, 220 200, 420 40 L420 -20 L-20 -20 Z" fill="url(#wv1)"/>
+    <path d="M-20 520 C 120 330, 260 470, 420 300 L420 560 C 300 640, 120 600, -20 700 Z" fill="url(#wv2)"/>
+    <path d="M-20 420 C 100 300, 240 380, 420 220" fill="none" stroke="#ffffff" stroke-opacity=".26" stroke-width="1.5"/>
+    <g class="goldline">
+      <path d="M-20 170 C 20 70, 130 10, 280 -20" fill="none" stroke="url(#goldrib)" stroke-width="8" stroke-linecap="round"/>
+      <path d="M-20 192 C 30 92, 140 32, 300 -8" fill="none" stroke="url(#goldrib)" stroke-opacity=".6" stroke-width="2"/>
+      <path d="M420 690 C 330 780, 200 830, 40 840" fill="none" stroke="url(#goldrib)" stroke-width="8" stroke-linecap="round"/>
+      <path d="M420 668 C 340 758, 210 808, 60 818" fill="none" stroke="url(#goldrib)" stroke-opacity=".6" stroke-width="2"/>
+    </g>
+  </svg>
+</div>
+
+<!-- LOGIN -->
+<main id="login" class="wrap login">
+  <div class="mono" aria-hidden="true">
+    <svg viewBox="0 0 300 390" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="mg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#fff3b8"/><stop offset=".28" stop-color="#f6d56a"/><stop offset=".52" stop-color="#c58a22"/><stop offset=".72" stop-color="#f4d578"/><stop offset="1" stop-color="#8c5c10"/>
+        </linearGradient>
+      </defs>
+      <text x="156" y="205" text-anchor="middle" font-family="Cinzel, Georgia, serif" font-weight="800" font-size="190" fill="url(#mg)" stroke="#8c5c10" stroke-width="1.2" paint-order="stroke">J</text>
+      <text x="150" y="372" text-anchor="middle" font-family="Cinzel, Georgia, serif" font-weight="800" font-size="215" fill="url(#mg)" stroke="#8c5c10" stroke-width="1.2" paint-order="stroke">M</text>
+    </svg>
+  </div>
+  <h1 class="gold-txt">Painel Jean Mendes</h1>
+  <div class="card">
+    <form id="loginForm" novalidate>
+      <div class="field">
+        <label for="loginUser">E-mail</label>
+        <input type="text" id="loginUser" inputmode="email" autocomplete="username" autocapitalize="none" placeholder="seuemail@exemplo.com">
+      </div>
+      <div class="field">
+        <label for="loginPass">Senha</label>
+        <input type="password" id="loginPass" autocomplete="current-password" placeholder="Sua senha">
+      </div>
+      <p class="msg" id="loginMsg" role="status"></p>
+      <button type="submit" class="btn btn-gold">Entrar</button>
+      <p class="hint">Entre com o e-mail e a senha do painel.</p>
+    </form>
+  </div>
+</main>
+
+<!-- PAINEL -->
+<div id="app" class="wrap" hidden>
+  <header class="top">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">JM</span>
+      <span class="brand-text"><strong>Jean Mendes</strong><small>Painel</small></span>
+    </div>
+    <button type="button" class="btn btn-glass btn-small" id="logout">Sair</button>
+  </header>
+
+  <ul class="tabs" role="tablist" aria-label="Seções do painel">
+    <li role="presentation"><button type="button" class="tab" role="tab" id="tab-pubs" data-tab="pubs" aria-selected="true" aria-controls="panel-pubs">Publicações</button></li>
+    <li role="presentation"><button type="button" class="tab" role="tab" id="tab-txt" data-tab="txt" aria-selected="false" aria-controls="panel-txt">Textos do site</button></li>
+    <li role="presentation"><button type="button" class="tab" role="tab" id="tab-acc" data-tab="acc" aria-selected="false" aria-controls="panel-acc">Conta</button></li>
+  </ul>
+  <p class="msg" id="appMsg" role="status"></p>
+
+  <!-- Publicações -->
+  <section id="panel-pubs" class="card panel" role="tabpanel" aria-labelledby="tab-pubs">
+    <h2>Suas publicações</h2>
+    <button type="button" class="btn btn-gold" id="newPub">+ Nova publicação</button>
+
+    <form id="pubForm" class="inner" hidden novalidate>
+      <h3 id="pubFormTitle">Nova publicação</h3>
+      <div class="field">
+        <label for="pubTitle">Título</label>
+        <input type="text" id="pubTitle" placeholder="Ex.: Novo horário de atendimento">
+      </div>
+      <div class="field">
+        <label for="pubCat">Onde aparece</label>
+        <select id="pubCat">
+          <option>Novidades</option>
+          <option>Avisos</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="pubText">Texto</label>
+        <textarea id="pubText" placeholder="Escreva o que o público vai ler"></textarea>
+      </div>
+      <label class="check" for="pubLive"><input type="checkbox" id="pubLive" checked> No ar (aparece no site)</label>
+      <label class="check" for="pubFeatured"><input type="checkbox" id="pubFeatured"> Destaque (fica no topo)</label>
+      <p class="msg" id="pubMsg" role="status"></p>
+      <div class="row">
+        <button type="submit" class="btn btn-gold btn-small">Salvar publicação</button>
+        <button type="button" class="btn btn-glass btn-small" id="pubCancel">Cancelar</button>
+      </div>
+    </form>
+
+    <ul class="list" id="pubList"></ul>
+  </section>
+
+  <!-- Textos do site -->
+  <section id="panel-txt" class="card panel" role="tabpanel" aria-labelledby="tab-txt" hidden>
+    <h2>Textos do site</h2>
+    <div class="field">
+      <label for="txtNotice">Faixa de aviso no topo (deixe vazio para esconder)</label>
+      <input type="text" id="txtNotice" placeholder="Ex.: Plantão no feriado: chame no WhatsApp">
+    </div>
+    <div class="field">
+      <label for="txtTitle">Nome em destaque no topo do site</label>
+      <input type="text" id="txtTitle" value="Jean Mendes">
+    </div>
+    <div class="field">
+      <label for="txtIntro">Texto de apresentação</label>
+      <textarea id="txtIntro">OAB-GO 58.257. Atendimento em Goiatuba, Goiás.</textarea>
+    </div>
+    <div class="field">
+      <label for="txtWa1">WhatsApp principal (só números, com 55 e DDD)</label>
+      <input type="text" id="txtWa1" inputmode="numeric" value="5564984022777">
+    </div>
+    <div class="field">
+      <label for="txtWa2">Segundo WhatsApp (opcional)</label>
+      <input type="text" id="txtWa2" inputmode="numeric" value="5564981272777">
+    </div>
+
+    <div class="field">
+      <span class="lbl">Áreas de atuação</span>
+      <p class="hint">As áreas são salvas na hora e aparecem no site. Sem nenhuma área, a seção some do site.</p>
+    </div>
+    <ul class="list" id="areaList"></ul>
+    <div class="inner">
+      <h3 id="areaFormTitle">Nova área</h3>
+      <div class="field">
+        <label for="areaName">Nome da área</label>
+        <input type="text" id="areaName" placeholder="Ex.: Direito do consumidor">
+      </div>
+      <div class="field">
+        <label for="areaDesc">Descrição curta</label>
+        <input type="text" id="areaDesc" placeholder="Uma frase explicando a área">
+      </div>
+      <p class="msg" id="areaMsg" role="status"></p>
+      <div class="row">
+        <button type="button" class="btn btn-glass btn-small" id="areaSave">Adicionar</button>
+        <button type="button" class="btn btn-glass btn-small" id="areaCancel" hidden>Cancelar edição</button>
+      </div>
+    </div>
+
+    <p class="msg" id="txtMsg" role="status"></p>
+    <button type="button" class="btn btn-gold" id="saveTxt">Salvar textos</button>
+  </section>
+
+  <!-- Conta -->
+  <section id="panel-acc" class="card panel" role="tabpanel" aria-labelledby="tab-acc" hidden>
+    <h2>Trocar minha senha</h2>
+    <div class="field">
+      <label for="accPass1">Nova senha (mínimo 10 caracteres)</label>
+      <input type="password" id="accPass1" autocomplete="new-password">
+    </div>
+    <div class="field">
+      <label for="accPass2">Repita a nova senha</label>
+      <input type="password" id="accPass2" autocomplete="new-password">
+    </div>
+    <p class="msg" id="accMsg" role="status"></p>
+    <button type="button" class="btn btn-gold" id="saveAcc">Salvar nova senha</button>
+  </section>
+</div>
+
+<script>(function () {
+  var BASE = 'https://vscnhldmclffediugevp.supabase.co';
+  var KEY = 'sb_publishable_9w_K1yTHP5Svh1aPhYycGA_KXMEkmXl';
+  var SKEY = 'jm-painel-sessao';
+  var $ = function (s) { return document.querySelector(s); };
+  var el = function (tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  };
+  var button = function (label, cls, onClick) {
+    var b = el('button', 'btn btn-small ' + cls, label);
+    b.type = 'button';
+    b.addEventListener('click', onClick);
+    return b;
+  };
+  var msg = function (id, text, kind) {
+    var m = $(id);
+    m.textContent = text || '';
+    m.className = 'msg' + (kind ? ' ' + kind : '');
+  };
+  var dataBr = function (iso) {
+    var d = new Date(iso);
+    return isNaN(d) ? '' : d.toLocaleDateString('pt-BR');
+  };
+
+  /* ---------- sessão e chamadas ao banco ---------- */
+  var sess = null;
+  try { sess = JSON.parse(localStorage.getItem(SKEY) || 'null'); } catch (e) { sess = null; }
+  function saveSess(s) {
+    sess = s;
+    try { if (s) localStorage.setItem(SKEY, JSON.stringify(s)); else localStorage.removeItem(SKEY); } catch (e) {}
+  }
+  function toSess(j) {
+    return { access_token: j.access_token, refresh_token: j.refresh_token, expires_at: Date.now() + (j.expires_in || 3600) * 1000 - 60000 };
+  }
+  function raw(path, opts, token) {
+    opts = opts || {};
+    var h = { apikey: KEY, 'Content-Type': 'application/json' };
+    if (token) h.Authorization = 'Bearer ' + token;
+    if (opts.prefer) h.Prefer = opts.prefer;
+    return fetch(BASE + path, { method: opts.method || 'GET', headers: h, body: opts.body ? JSON.stringify(opts.body) : undefined });
+  }
+  function refresh() {
+    if (!sess || !sess.refresh_token) return Promise.reject(new Error('sessao expirada'));
+    return raw('/auth/v1/token?grant_type=refresh_token', { method: 'POST', body: { refresh_token: sess.refresh_token } })
+      .then(function (r) { if (!r.ok) throw new Error('sessao expirada'); return r.json(); })
+      .then(function (j) { saveSess(toSess(j)); });
+  }
+  function api(path, opts) {
+    var ready = (sess && Date.now() > sess.expires_at) ? refresh() : Promise.resolve();
+    return ready.then(function () {
+      return raw(path, opts, sess && sess.access_token);
+    }).then(function (r) {
+      if (r.status === 401 && sess) {
+        return refresh().then(function () { return raw(path, opts, sess.access_token); });
+      }
+      return r;
+    }).then(function (r) {
+      if (!r.ok) {
+        var e = new Error('http ' + r.status);
+        e.status = r.status;
+        throw e;
+      }
+      return r.status === 204 ? null : r.text().then(function (t) { return t ? JSON.parse(t) : null; });
+    });
+  }
+  function mut(path, method, body) {
+    return api(path, { method: method, body: body, prefer: 'return=representation' }).then(function (rows) {
+      if (!rows || !rows.length) { var e = new Error('nada mudou'); e.status = 403; throw e; }
+      return rows;
+    });
+  }
+  function oops(e) {
+    if (e && e.message === 'sessao expirada') { goLogin('Sua sessão acabou. Entre de novo.'); return 'Sua sessão acabou. Entre de novo.'; }
+    if (e && e.name === 'TypeError') return 'Sem conexão. Confira a internet e tente de novo.';
+    if (e && e.status === 403) return 'Esta conta não tem permissão para fazer isso.';
+    return 'Não deu certo. Tente de novo.';
+  }
+
+  /* ---------- entrar e sair ---------- */
+  function showLogin(text) {
+    $('#app').hidden = true;
+    $('#login').hidden = false;
+    msg('#loginMsg', text || '', text ? 'err' : '');
+  }
+  function goLogin(text) { saveSess(null); showLogin(text); }
+  function checkAdmin() {
+    return api('/rest/v1/admins?select=user_id').then(function (rows) {
+      if (!rows || !rows.length) throw new Error('sem permissao');
+    });
+  }
+  function enter() {
+    $('#login').hidden = true;
+    $('#app').hidden = false;
+    window.scrollTo(0, 0);
+    return loadAll();
+  }
+
+  $('#loginForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var email = $('#loginUser').value.trim();
+    var pass = $('#loginPass').value;
+    if (!email || !pass) { msg('#loginMsg', 'Preencha o e-mail e a senha.', 'err'); return; }
+    var btn = $('#loginForm button[type="submit"]');
+    btn.disabled = true;
+    msg('#loginMsg', 'Entrando...');
+    raw('/auth/v1/token?grant_type=password', { method: 'POST', body: { email: email, password: pass } })
+      .then(function (r) { if (!r.ok) throw new Error('credenciais'); return r.json(); })
+      .then(function (j) { saveSess(toSess(j)); return checkAdmin(); })
+      .then(function () { $('#loginPass').value = ''; msg('#loginMsg', ''); return enter(); })
+      .catch(function (err) {
+        var text = 'Não deu certo. Tente de novo.';
+        if (err.message === 'credenciais') text = 'E-mail ou senha incorretos.';
+        else if (err.message === 'sem permissao') { saveSess(null); text = 'Esta conta não tem permissão para usar o painel.'; }
+        else if (err.name === 'TypeError') text = 'Sem conexão. Confira a internet e tente de novo.';
+        msg('#loginMsg', text, 'err');
+      })
+      .then(function () { btn.disabled = false; });
+  });
+
+  $('#logout').addEventListener('click', function () {
+    if (sess) raw('/auth/v1/logout', { method: 'POST' }, sess.access_token).catch(function () {});
+    $('#loginPass').value = '';
+    goLogin('');
+    window.scrollTo(0, 0);
+  });
+
+  /* ---------- abas ---------- */
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+  function showTab(name) {
+    tabs.forEach(function (t) { t.setAttribute('aria-selected', t.dataset.tab === name ? 'true' : 'false'); });
+    ['pubs', 'txt', 'acc'].forEach(function (n) { $('#panel-' + n).hidden = (n !== name); });
+  }
+  tabs.forEach(function (t) { t.addEventListener('click', function () { showTab(t.dataset.tab); }); });
+
+  /* ---------- dados ---------- */
+  var state = { pubs: [], areas: [], editingPub: null, editingArea: null, confirmPub: null, confirmArea: null };
+
+  function loadPubs() {
+    return api('/rest/v1/posts?select=*&order=featured.desc,created_at.desc').then(function (r) { state.pubs = r || []; renderPubs(); });
+  }
+  function loadAreas() {
+    return api('/rest/v1/areas?select=*&order=position.asc,id.asc').then(function (r) { state.areas = r || []; renderAreas(); });
+  }
+  function loadSettings() {
+    return api('/rest/v1/site_settings?id=eq.1&select=*').then(function (r) {
+      var s = r && r[0];
+      if (!s) return;
+      $('#txtNotice').value = s.notice || '';
+      $('#txtTitle').value = s.title || '';
+      $('#txtIntro').value = s.intro || '';
+      $('#txtWa1').value = s.whatsapp1 || '';
+      $('#txtWa2').value = s.whatsapp2 || '';
+    });
+  }
+  function loadAll() {
+    msg('#appMsg', 'Carregando...');
+    return Promise.all([loadSettings(), loadPubs(), loadAreas()])
+      .then(function () { msg('#appMsg', ''); })
+      .catch(function (e) { msg('#appMsg', oops(e), 'err'); });
+  }
+
+  /* ---------- publicações ---------- */
+  function badge(text, kind) { return el('span', 'badge ' + kind, text); }
+
+  function renderPubs() {
+    var list = $('#pubList');
+    list.replaceChildren();
+    if (!state.pubs.length) {
+      var li0 = el('li', 'item');
+      li0.append(el('p', 'empty', 'Nenhuma publicação ainda. Toque em “+ Nova publicação”.'));
+      list.append(li0);
+      return;
+    }
+    state.pubs.forEach(function (p) {
+      var li = el('li', 'item');
+      li.append(el('h3', null, p.title));
+      var badges = el('div', 'badges');
+      badges.append(p.live ? badge('No ar', 'on') : badge('Rascunho', 'off'));
+      if (p.featured) badges.append(badge('Destaque', 'star'));
+      li.append(badges);
+      li.append(el('p', null, p.category + ' · ' + dataBr(p.created_at)));
+      var act = el('div', 'actions');
+      if (state.confirmPub === p.id) {
+        act.append(el('span', 'ask', 'Apagar esta publicação?'));
+        act.append(button('Sim, apagar', 'btn-danger', function () {
+          mut('/rest/v1/posts?id=eq.' + p.id, 'DELETE')
+            .then(function () { state.confirmPub = null; return loadPubs(); })
+            .catch(function (err) { state.confirmPub = null; renderPubs(); msg('#appMsg', oops(err), 'err'); });
+        }));
+        act.append(button('Cancelar', 'btn-glass', function () { state.confirmPub = null; renderPubs(); }));
+      } else {
+        act.append(button('Editar', 'btn-glass', function () { openPubForm(p); }));
+        act.append(button('Apagar', 'btn-danger', function () { state.confirmPub = p.id; renderPubs(); }));
+      }
+      li.append(act);
+      list.append(li);
+    });
+  }
+
+  function openPubForm(p) {
+    state.editingPub = p ? p.id : null;
+    $('#pubFormTitle').textContent = p ? 'Editar publicação' : 'Nova publicação';
+    $('#pubTitle').value = p ? p.title : '';
+    $('#pubCat').value = p ? p.category : 'Novidades';
+    $('#pubText').value = p ? p.body : '';
+    $('#pubLive').checked = p ? p.live : true;
+    $('#pubFeatured').checked = p ? p.featured : false;
+    msg('#pubMsg', '');
+    $('#pubForm').hidden = false;
+    $('#pubTitle').focus();
+  }
+  function closePubForm() { $('#pubForm').hidden = true; state.editingPub = null; }
+
+  $('#newPub').addEventListener('click', function () { openPubForm(null); });
+  $('#pubCancel').addEventListener('click', closePubForm);
+  $('#pubForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var title = $('#pubTitle').value.trim();
+    var text = $('#pubText').value.trim();
+    if (!title) { msg('#pubMsg', 'Escreva um título para a publicação.', 'err'); return; }
+    if (!text) { msg('#pubMsg', 'Escreva o texto da publicação.', 'err'); return; }
+    var data = { title: title, body: text, category: $('#pubCat').value, live: $('#pubLive').checked, featured: $('#pubFeatured').checked };
+    msg('#pubMsg', 'Salvando...');
+    var req = state.editingPub != null
+      ? mut('/rest/v1/posts?id=eq.' + state.editingPub, 'PATCH', data)
+      : mut('/rest/v1/posts', 'POST', data);
+    req.then(loadPubs).then(function () { msg('#pubMsg', ''); closePubForm(); })
+      .catch(function (err) { msg('#pubMsg', oops(err), 'err'); });
+  });
+
+  /* ---------- áreas de atuação ---------- */
+  function renderAreas() {
+    var list = $('#areaList');
+    list.replaceChildren();
+    if (!state.areas.length) {
+      var li0 = el('li', 'item');
+      li0.append(el('p', 'empty', 'Nenhuma área ainda. A seção fica escondida no site.'));
+      list.append(li0);
+      return;
+    }
+    state.areas.forEach(function (a) {
+      var li = el('li', 'item');
+      li.append(el('h3', null, a.name));
+      if (a.description) li.append(el('p', null, a.description));
+      var act = el('div', 'actions');
+      if (state.confirmArea === a.id) {
+        act.append(el('span', 'ask', 'Remover esta área?'));
+        act.append(button('Sim, remover', 'btn-danger', function () {
+          mut('/rest/v1/areas?id=eq.' + a.id, 'DELETE')
+            .then(function () {
+              state.confirmArea = null;
+              if (state.editingArea === a.id) resetAreaForm();
+              msg('#areaMsg', 'Área removida do site.', 'ok');
+              return loadAreas();
+            })
+            .catch(function (err) { state.confirmArea = null; renderAreas(); msg('#areaMsg', oops(err), 'err'); });
+        }));
+        act.append(button('Cancelar', 'btn-glass', function () { state.confirmArea = null; renderAreas(); }));
+      } else {
+        act.append(button('Editar', 'btn-glass', function () {
+          state.editingArea = a.id;
+          $('#areaFormTitle').textContent = 'Editar área';
+          $('#areaName').value = a.name;
+          $('#areaDesc').value = a.description || '';
+          $('#areaSave').textContent = 'Salvar área';
+          $('#areaCancel').hidden = false;
+          msg('#areaMsg', '');
+          $('#areaName').focus();
+        }));
+        act.append(button('Remover', 'btn-danger', function () { state.confirmArea = a.id; renderAreas(); }));
+      }
+      li.append(act);
+      list.append(li);
+    });
+  }
+  function resetAreaForm() {
+    state.editingArea = null;
+    $('#areaFormTitle').textContent = 'Nova área';
+    $('#areaName').value = '';
+    $('#areaDesc').value = '';
+    $('#areaSave').textContent = 'Adicionar';
+    $('#areaCancel').hidden = true;
+  }
+  $('#areaCancel').addEventListener('click', function () { resetAreaForm(); msg('#areaMsg', ''); });
+  $('#areaSave').addEventListener('click', function () {
+    var name = $('#areaName').value.trim();
+    var desc = $('#areaDesc').value.trim();
+    if (!name) { msg('#areaMsg', 'Escreva o nome da área.', 'err'); return; }
+    msg('#areaMsg', 'Salvando...');
+    var req;
+    if (state.editingArea != null) {
+      req = mut('/rest/v1/areas?id=eq.' + state.editingArea, 'PATCH', { name: name, description: desc });
+    } else {
+      var pos = state.areas.length ? Math.max.apply(null, state.areas.map(function (a) { return a.position; })) + 1 : 1;
+      req = mut('/rest/v1/areas', 'POST', { name: name, description: desc, position: pos });
+    }
+    req.then(function () { resetAreaForm(); msg('#areaMsg', 'Área salva. Já aparece no site.', 'ok'); return loadAreas(); })
+      .catch(function (err) { msg('#areaMsg', oops(err), 'err'); });
+  });
+
+  /* ---------- textos do site ---------- */
+  var waOk = function (v) { return /^55\d{10,11}$/.test(v); };
+  $('#saveTxt').addEventListener('click', function () {
+    var wa1 = $('#txtWa1').value.replace(/\D/g, '');
+    var wa2 = $('#txtWa2').value.replace(/\D/g, '');
+    $('#txtWa1').value = wa1;
+    $('#txtWa2').value = wa2;
+    if (!$('#txtTitle').value.trim()) { msg('#txtMsg', 'O nome em destaque não pode ficar vazio.', 'err'); return; }
+    if (!waOk(wa1)) { msg('#txtMsg', 'O WhatsApp principal precisa ter só números, começando com 55 e o DDD. Exemplo: 5564984022777.', 'err'); return; }
+    if (wa2 && !waOk(wa2)) { msg('#txtMsg', 'O segundo WhatsApp precisa ter só números, começando com 55 e o DDD, ou ficar vazio.', 'err'); return; }
+    msg('#txtMsg', 'Salvando...');
+    mut('/rest/v1/site_settings?id=eq.1', 'PATCH', {
+      notice: $('#txtNotice').value.trim(),
+      title: $('#txtTitle').value.trim(),
+      intro: $('#txtIntro').value.trim(),
+      whatsapp1: wa1,
+      whatsapp2: wa2,
+      updated_at: new Date().toISOString()
+    }).then(function () { msg('#txtMsg', 'Textos salvos. Já aparecem no site.', 'ok'); })
+      .catch(function (err) { msg('#txtMsg', oops(err), 'err'); });
+  });
+
+  /* ---------- conta ---------- */
+  $('#saveAcc').addEventListener('click', function () {
+    var a = $('#accPass1').value;
+    var b = $('#accPass2').value;
+    if (a.length < 10) { msg('#accMsg', 'A senha precisa ter pelo menos 10 caracteres.', 'err'); return; }
+    if (a !== b) { msg('#accMsg', 'As duas senhas não são iguais. Digite de novo.', 'err'); return; }
+    msg('#accMsg', 'Salvando...');
+    api('/auth/v1/user', { method: 'PUT', body: { password: a } })
+      .then(function () {
+        $('#accPass1').value = '';
+        $('#accPass2').value = '';
+        msg('#accMsg', 'Senha trocada.', 'ok');
+      })
+      .catch(function (err) {
+        if (err && err.status === 422) msg('#accMsg', 'Essa senha não foi aceita. Escolha outra, diferente da atual.', 'err');
+        else msg('#accMsg', oops(err), 'err');
+      });
+  });
+
+  /* ---------- começo ---------- */
+  if (sess) {
+    $('#login').hidden = true;
+    checkAdmin().then(enter).catch(function (e) {
+      if (e && e.message === 'sem permissao') goLogin('Esta conta não tem permissão para usar o painel.');
+      else if (e && e.name === 'TypeError') showLogin('Sem conexão. Confira a internet e tente de novo.');
+      else goLogin('');
+    });
+  }
+})();</script>
+<script>if ('serviceWorker' in navigator) { window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); }); }</script>
+</body>
+</html>

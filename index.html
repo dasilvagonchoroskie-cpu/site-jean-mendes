@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#032e35">
+<meta name="description" content="Jean Mendes, advogado em Goiatuba (GO). OAB-GO 58.257. Atendimento 24 horas.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Jean Mendes">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Jean Mendes Advogado</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Inter:wght@400;500;600&family=Playfair+Display:wght@700;900&display=swap">
+<style>
+/* Concept: turquoise silk waves with gold metal ribbons; gold letters, buttons and card edges carry bevel and depth, like the business card art. Single committed dark look. */
+:root {
+  --teal-deep: #032e35;
+  --teal: #0a7480;
+  --teal-bright: #1fe0e0;
+  --gold-hi: #fff3b8;
+  --gold: #e8b94a;
+  --gold-lo: #8c5c10;
+  --ink: #3a2403;
+  --text: #e8fbfb;
+  --muted: #a9d6d9;
+  --f-display: 'Cinzel', Georgia, 'Times New Roman', serif;
+  --f-name: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --f-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --gold-grad: linear-gradient(180deg, #fff3b8 0%, #f6d56a 28%, #c58a22 52%, #f4d578 72%, #8c5c10 100%);
+  color-scheme: dark;
+}
+html { scroll-behavior: smooth; }
+body {
+  background-color: var(--teal-deep);
+  background-image:
+    radial-gradient(120% 55% at 15% 0%, rgba(31, 224, 224, .42), transparent 60%),
+    radial-gradient(90% 45% at 100% 38%, rgba(31, 224, 224, .22), transparent 65%),
+    linear-gradient(180deg, #05555f 0%, #033a43 45%, #021f24 100%);
+  color: var(--text);
+  font-family: var(--f-body);
+  font-size: 15px;
+  line-height: 1.55;
+  padding-bottom: 92px;
+}
+* { box-sizing: border-box; }
+.bg { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+.bg svg { display: block; width: 100%; height: 100%; }
+.bg .goldline { filter: drop-shadow(0 0 5px rgba(255, 214, 110, .8)); }
+
+.wrap {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+/* gold metal text */
+.gold { color: var(--gold); }
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .gold {
+    background: var(--gold-grad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 1px 0 #5c3a06) drop-shadow(0 2px 0 #4a2f05) drop-shadow(0 8px 10px rgba(0, 0, 0, .55));
+  }
+}
+
+a:focus-visible { outline: 3px solid var(--gold-hi); outline-offset: 3px; }
+
+/* top bar */
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 14px; }
+.logo {
+  width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center;
+  font: 800 21px/1 var(--f-display); text-decoration: none;
+  background: linear-gradient(160deg, #12a2aa, #043640 70%);
+  border: 1.5px solid var(--gold);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .4), inset 0 -6px 10px rgba(0, 0, 0, .45), 0 5px 10px rgba(0, 0, 0, .5);
+}
+.logo span { display: block; }
+.logo .gold { background: none; -webkit-background-clip: border-box; background-clip: border-box; color: var(--gold-hi); -webkit-text-fill-color: var(--gold-hi); filter: drop-shadow(0 1px 0 #5c3a06); }
+
+/* buttons */
+.btn {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 52px; padding: 12px 22px; border-radius: 14px;
+  font: 600 16px/1.2 var(--f-body); text-decoration: none; text-align: center;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.btn svg { width: 22px; height: 22px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+.btn-gold {
+  color: var(--ink);
+  background: linear-gradient(180deg, #fff0a8 0%, #f2cb5a 38%, #d49a2c 62%, #f0c95e 100%);
+  border: 1px solid #ffe9a0;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, .6);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .75), inset 0 -3px 4px rgba(120, 76, 8, .45), 0 5px 0 #7a4f0c, 0 13px 20px rgba(0, 0, 0, .5);
+}
+.btn-gold:active { transform: translateY(4px); box-shadow: inset 0 2px 0 rgba(255, 255, 255, .75), inset 0 -3px 4px rgba(120, 76, 8, .45), 0 1px 0 #7a4f0c, 0 6px 10px rgba(0, 0, 0, .45); }
+.btn-glass {
+  color: var(--gold-hi);
+  background: linear-gradient(180deg, rgba(255, 255, 255, .17), rgba(31, 224, 224, .1) 45%, rgba(2, 31, 36, .55));
+  border: 1px solid rgba(240, 201, 94, .75);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .4), inset 0 -2px 6px rgba(0, 0, 0, .35), 0 5px 0 rgba(2, 31, 36, .95), 0 12px 18px rgba(0, 0, 0, .4);
+}
+.btn-glass:active { transform: translateY(4px); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .4), inset 0 -2px 6px rgba(0, 0, 0, .35), 0 1px 0 rgba(2, 31, 36, .95), 0 5px 8px rgba(0, 0, 0, .4); }
+.btn-small { min-height: 40px; padding: 8px 16px; font-size: 14px; border-radius: 12px; }
+.btn small { display: block; font-weight: 500; font-size: 13px; opacity: .85; }
+
+main { display: flex; flex-direction: column; gap: 40px; }
+section { scroll-margin-top: 12px; }
+
+/* hero */
+.hero { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px; padding-top: 6px; }
+.mono { position: relative; width: clamp(210px, 64vw, 300px); }
+.mono svg { display: block; width: 100%; height: auto; overflow: visible; filter: drop-shadow(0 2px 0 #5c3a06) drop-shadow(0 8px 10px rgba(0, 0, 0, .55)); }
+.glint {
+  position: absolute; width: 22px; height: 22px;
+  background: radial-gradient(circle, #fff 0%, #fff6c8 45%, rgba(255, 246, 200, 0) 72%);
+  clip-path: polygon(50% 0, 58% 42%, 100% 50%, 58% 58%, 50% 100%, 42% 58%, 0 50%, 42% 42%);
+  opacity: .9; animation: twinkle 3.2s ease-in-out infinite alternate;
+}
+.g1 { top: 4%; right: 8%; }
+.g2 { top: 52%; left: -4%; width: 16px; height: 16px; animation-delay: 1.1s; }
+.g3 { bottom: 10%; right: -2%; width: 18px; height: 18px; animation-delay: 2s; }
+@keyframes twinkle { from { opacity: .5; transform: scale(.8); } to { opacity: 1; transform: scale(1.15); } }
+
+h1 { margin: 0; width: 100%; max-width: 440px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+h1 .adv { font: 800 clamp(30px, 9vw, 46px)/1.1 var(--f-display); letter-spacing: .1em; text-transform: uppercase; }
+h1 .name { font: 700 clamp(36px, 11vw, 54px)/1.1 var(--f-name); }
+.rule { display: flex; align-items: center; gap: 10px; width: 100%; }
+.rule .line { flex: 1; height: 3px; border-radius: 2px; background: linear-gradient(90deg, transparent, #e8b94a 40%, #fff3b8 65%, #8c5c10); box-shadow: 0 2px 3px rgba(0, 0, 0, .5); }
+.rule .line:last-child { transform: scaleX(-1); }
+.rule .dia { width: 12px; height: 12px; flex: none; transform: rotate(45deg); background: var(--gold-grad); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .55), 0 3px 5px rgba(0, 0, 0, .55); }
+
+.pill {
+  margin: 0; padding: 7px 18px; border-radius: 999px;
+  font: 600 12px/1 var(--f-display); letter-spacing: .14em; text-transform: uppercase; color: var(--gold-hi);
+  background: linear-gradient(180deg, rgba(2, 31, 36, .75), rgba(5, 85, 95, .55));
+  border: 1px solid rgba(240, 201, 94, .7);
+  box-shadow: inset 0 3px 6px rgba(0, 0, 0, .55), inset 0 -1px 0 rgba(255, 255, 255, .25), 0 3px 8px rgba(0, 0, 0, .4);
+}
+.lead { margin: 0; max-width: 34ch; color: var(--text); font-size: 16px; }
+.hero-actions { display: flex; flex-direction: column; gap: 14px; width: 100%; max-width: 360px; margin-top: 6px; }
+
+/* section titles */
+.sec-title { display: flex; flex-direction: column; align-items: center; gap: 8px; margin: 0 0 18px; text-align: center; }
+.sec-title h2 { margin: 0; font: 800 clamp(24px, 6.5vw, 32px)/1.15 var(--f-display); letter-spacing: .06em; text-wrap: balance; }
+.sec-title .rule { max-width: 200px; }
+
+/* cards */
+.card {
+  position: relative; border-radius: 18px; padding: 18px;
+  background: linear-gradient(155deg, rgba(255, 255, 255, .14) 0%, rgba(31, 224, 224, .14) 28%, rgba(3, 46, 53, .9) 100%);
+  border: 1px solid rgba(240, 201, 94, .55);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .4), inset 0 -14px 24px rgba(0, 0, 0, .28), 0 16px 30px rgba(0, 0, 0, .5), 0 2px 0 rgba(0, 0, 0, .4);
+}
+.areas { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin: 0; padding: 0; list-style: none; }
+.areas .card { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.ico {
+  width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center;
+  background: radial-gradient(circle at 35% 30%, #17a3ab, #05343b 70%);
+  border: 2px solid var(--gold);
+  box-shadow: inset 0 3px 6px rgba(255, 255, 255, .35), inset 0 -6px 10px rgba(0, 0, 0, .5), 0 6px 12px rgba(0, 0, 0, .5);
+}
+.ico svg { width: 26px; height: 26px; fill: none; stroke: var(--gold-hi); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 1px 0 #5c3a06); }
+.card h3 { margin: 0; font: 700 19px/1.25 var(--f-name); color: var(--gold-hi); text-shadow: 0 2px 0 rgba(0, 0, 0, .45); }
+.card p { margin: 0; color: var(--muted); font-size: 14px; }
+
+.news { display: flex; flex-direction: column; gap: 10px; }
+.tag {
+  align-self: flex-start; padding: 4px 12px; border-radius: 999px;
+  font: 600 11px/1 var(--f-display); letter-spacing: .14em; text-transform: uppercase; color: var(--ink);
+  background: linear-gradient(180deg, #fff0a8, #d49a2c);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7), 0 2px 0 #7a4f0c;
+}
+
+/* contact */
+.contact { display: flex; flex-direction: column; gap: 16px; }
+.contact .btns { display: flex; flex-direction: column; gap: 14px; }
+.info { margin: 0; display: flex; flex-direction: column; gap: 12px; padding-top: 14px; border-top: 1px solid rgba(240, 201, 94, .35); }
+.info div { min-width: 0; }
+.info dt { font: 600 11px/1.2 var(--f-display); letter-spacing: .14em; text-transform: uppercase; color: var(--gold); margin-bottom: 2px; }
+.info dd { margin: 0; overflow-wrap: anywhere; }
+
+footer { text-align: center; color: var(--muted); font-size: 13px; padding-block: 36px 8px; }
+footer strong { color: var(--gold-hi); font-weight: 600; }
+
+/* fixed menu */
+.nav {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+  padding: 8px max(10px, env(safe-area-inset-right, 0px)) calc(8px + env(safe-area-inset-bottom, 0px)) max(10px, env(safe-area-inset-left, 0px));
+  background: linear-gradient(180deg, rgba(6, 80, 90, .94), rgba(2, 31, 36, .98));
+  border-top: 1px solid rgba(240, 201, 94, .8);
+  box-shadow: 0 -10px 24px rgba(0, 0, 0, .45), inset 0 1px 0 rgba(255, 255, 255, .22);
+}
+.nav ul { display: flex; gap: 4px; max-width: 720px; margin: 0 auto; padding: 0; list-style: none; }
+.nav li { flex: 1; min-width: 0; }
+.nav a {
+  display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 7px 2px; border-radius: 12px;
+  color: var(--muted); text-decoration: none; font: 500 11px/1.1 var(--f-body);
+}
+.nav a:active { background: rgba(255, 255, 255, .1); }
+.nav .emo { display: block; font-size: 22px; line-height: 1; font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif; }
+.nav svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.nav .wa {
+  color: var(--ink); font-weight: 600;
+  background: linear-gradient(180deg, #fff0a8, #e0a937 60%, #f0c95e);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .7), inset 0 -2px 3px rgba(120, 76, 8, .4), 0 3px 0 #7a4f0c;
+}
+
+.notice { background: linear-gradient(180deg, #fff0a8, #e0a937 60%, #f0c95e); color: var(--ink); text-align: center; font: 600 14px/1.4 var(--f-body); padding: 10px 0; border-bottom: 1px solid #7a4f0c; box-shadow: 0 4px 10px rgba(0, 0, 0, .4); }
+.notice p { margin: 0; }
+.postlist { display: flex; flex-direction: column; gap: 14px; }
+.news p { white-space: pre-line; overflow-wrap: anywhere; }
+.news time { font-size: 13px; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .glint { animation: none; }
+  .btn { transition: none; }
+}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true">
+  <svg viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="wv1" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#22f0ef" stop-opacity=".55"/>
+        <stop offset="1" stop-color="#0a7480" stop-opacity=".05"/>
+      </linearGradient>
+      <linearGradient id="wv2" x1="1" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#1fe0e0" stop-opacity=".35"/>
+        <stop offset="1" stop-color="#021f24" stop-opacity="0"/>
+      </linearGradient>
+      <linearGradient id="goldrib" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#8c5c10"/>
+        <stop offset=".3" stop-color="#fff3b8"/>
+        <stop offset=".6" stop-color="#e8b94a"/>
+        <stop offset="1" stop-color="#8c5c10"/>
+      </linearGradient>
+    </defs>
+    <path d="M-20 260 C 60 120, 220 200, 420 40 L420 -20 L-20 -20 Z" fill="url(#wv1)"/>
+    <path d="M-20 520 C 120 330, 260 470, 420 300 L420 560 C 300 640, 120 600, -20 700 Z" fill="url(#wv2)"/>
+    <path d="M-20 420 C 100 300, 240 380, 420 220" fill="none" stroke="#ffffff" stroke-opacity=".28" stroke-width="1.5"/>
+    <path d="M-20 610 C 140 520, 260 600, 420 470" fill="none" stroke="#ffffff" stroke-opacity=".22" stroke-width="1.5"/>
+    <g class="goldline">
+      <path d="M-20 170 C 20 70, 130 10, 280 -20" fill="none" stroke="url(#goldrib)" stroke-width="8" stroke-linecap="round"/>
+      <path d="M-20 192 C 30 92, 140 32, 300 -8" fill="none" stroke="url(#goldrib)" stroke-opacity=".6" stroke-width="2"/>
+      <path d="M420 690 C 330 780, 200 830, 40 840" fill="none" stroke="url(#goldrib)" stroke-width="8" stroke-linecap="round"/>
+      <path d="M420 668 C 340 758, 210 808, 60 818" fill="none" stroke="url(#goldrib)" stroke-opacity=".6" stroke-width="2"/>
+    </g>
+  </svg>
+</div>
+
+<div id="notice" class="notice" hidden><p class="wrap" id="noticeText"></p></div>
+
+<header class="top wrap">
+  <a class="logo" href="#inicio" aria-label="Início"><span class="gold">JM</span></a>
+  <a class="btn btn-gold btn-small" href="#contato">Fale conosco</a>
+</header>
+
+<main>
+  <section id="inicio" class="hero wrap">
+    <div class="mono" aria-hidden="true">
+      <svg viewBox="0 0 300 390" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="mg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#fff3b8"/>
+            <stop offset=".28" stop-color="#f6d56a"/>
+            <stop offset=".52" stop-color="#c58a22"/>
+            <stop offset=".72" stop-color="#f4d578"/>
+            <stop offset="1" stop-color="#8c5c10"/>
+          </linearGradient>
+        </defs>
+        <text x="156" y="205" text-anchor="middle" font-family="Cinzel, Georgia, serif" font-weight="800" font-size="190" fill="url(#mg)" stroke="#8c5c10" stroke-width="1.2" paint-order="stroke">J</text>
+        <text x="150" y="372" text-anchor="middle" font-family="Cinzel, Georgia, serif" font-weight="800" font-size="215" fill="url(#mg)" stroke="#8c5c10" stroke-width="1.2" paint-order="stroke">M</text>
+      </svg>
+      <i class="glint g1"></i><i class="glint g2"></i><i class="glint g3"></i>
+    </div>
+    <h1>
+      <span class="adv gold">Advogado</span>
+      <span class="rule" aria-hidden="true"><span class="line"></span><span class="dia"></span><span class="line"></span></span>
+      <span class="name gold" id="siteName">Jean Mendes</span>
+    </h1>
+    <p class="pill">Advogado 24 horas</p>
+    <p class="lead" id="siteIntro">OAB-GO 58.257. Atendimento em Goiatuba, Goiás.</p>
+    <div class="hero-actions">
+      <a class="btn btn-gold" data-wa="1" href="https://wa.me/5564984022777?text=Ol%C3%A1%2C%20Dr.%20Jean.%20Vim%20pelo%20site." target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.4-4.2A8 8 0 1 1 8.4 18.6z"/><path d="M9 9.5c.3 2 2.2 3.9 4.5 4.5l1.3-1.2-1.8-1-.8.7c-.6-.3-1.3-1-1.6-1.6l.7-.8-1-1.8z"/></svg>
+        Falar no WhatsApp
+      </a>
+      <a class="btn btn-glass" href="#atuacao">Ver áreas de atuação</a>
+    </div>
+  </section>
+
+  <section id="atuacao" class="wrap">
+    <div class="sec-title">
+      <h2 class="gold">Áreas de atuação</h2>
+      <span class="rule" aria-hidden="true"><span class="line"></span><span class="dia"></span><span class="line"></span></span>
+    </div>
+    <ul class="areas" id="areas">
+      <li class="card">
+        <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21C7 17 3 13.5 3 9.5A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 9 2.5C21 13.5 17 17 12 21z"/></svg></span>
+        <h3>Família e sucessões</h3>
+        <p>Divórcio, guarda, pensão, inventário e partilha de bens.</p>
+      </li>
+      <li class="card">
+        <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg></span>
+        <h3>Direito criminal</h3>
+        <p>Defesa em inquéritos e processos, com atendimento a qualquer hora.</p>
+      </li>
+      <li class="card">
+        <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v16M6 20h12M5 7h14"/><path d="M5 7l-3 7a3 3 0 0 0 6 0zM19 7l-3 7a3 3 0 0 0 6 0z"/></svg></span>
+        <h3>Direito cível</h3>
+        <p>Contratos, cobranças, indenizações e questões de imóveis.</p>
+      </li>
+      <li class="card">
+        <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 16l1.5-5.5A2 2 0 0 1 8.4 9h7.2a2 2 0 0 1 1.9 1.5L19 16"/><path d="M4 16h16v3H4zM7 19v1.5M17 19v1.5"/><circle cx="8" cy="13.5" r=".6"/><circle cx="16" cy="13.5" r=".6"/></svg></span>
+        <h3>Trânsito</h3>
+        <p>Multas, suspensão e cassação da CNH, acidentes e seguros.</p>
+      </li>
+    </ul>
+  </section>
+
+  <section id="novidades" class="wrap">
+    <div class="sec-title">
+      <h2 class="gold">Novidades</h2>
+      <span class="rule" aria-hidden="true"><span class="line"></span><span class="dia"></span><span class="line"></span></span>
+    </div>
+    <div class="postlist" id="posts">
+      <article class="card news">
+        <h3>Nenhuma novidade por enquanto</h3>
+        <p>Volte em breve.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="contato" class="wrap">
+    <div class="sec-title">
+      <h2 class="gold">Vamos conversar?</h2>
+      <span class="rule" aria-hidden="true"><span class="line"></span><span class="dia"></span><span class="line"></span></span>
+    </div>
+    <div class="card contact">
+      <p style="margin:0">Atendimento 24 horas. Chame no WhatsApp e conte o seu caso.</p>
+      <div class="btns">
+        <a class="btn btn-gold" data-wa="1" href="https://wa.me/5564984022777?text=Ol%C3%A1%2C%20Dr.%20Jean.%20Vim%20pelo%20site." target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.4-4.2A8 8 0 1 1 8.4 18.6z"/><path d="M9 9.5c.3 2 2.2 3.9 4.5 4.5l1.3-1.2-1.8-1-.8.7c-.6-.3-1.3-1-1.6-1.6l.7-.8-1-1.8z"/></svg>
+          <span>WhatsApp<small data-phone="1">(64) 98402-2777</small></span>
+        </a>
+        <a class="btn btn-glass" data-wa="2" href="https://wa.me/5564981272777?text=Ol%C3%A1%2C%20Dr.%20Jean.%20Vim%20pelo%20site." target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.4-4.2A8 8 0 1 1 8.4 18.6z"/><path d="M9 9.5c.3 2 2.2 3.9 4.5 4.5l1.3-1.2-1.8-1-.8.7c-.6-.3-1.3-1-1.6-1.6l.7-.8-1-1.8z"/></svg>
+          <span>WhatsApp<small data-phone="2">(64) 98127-2777</small></span>
+        </a>
+      </div>
+      <dl class="info">
+        <div><dt>Telefones</dt><dd id="phones">(64) 98402-2777 · (64) 98127-2777</dd></div>
+        <div><dt>Endereço</dt><dd>Rua Minas Gerais, 471A, Centro, Goiatuba, Goiás, CEP 75600-000</dd></div>
+        <div><dt>Facebook</dt><dd>Jean Mendes Adv</dd></div>
+      </dl>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap">
+  <strong>Jean Mendes dos Santos</strong> · OAB-GO 58.257<br>
+  Goiatuba, Goiás
+</footer>
+
+<nav class="nav" aria-label="Menu principal">
+  <ul>
+    <li><a href="#inicio"><span class="emo" aria-hidden="true">🏠</span>Início</a></li>
+    <li><a href="#atuacao"><span class="emo" aria-hidden="true">⚖️</span>Atuação</a></li>
+    <li><a href="#novidades"><span class="emo" aria-hidden="true">📢</span>Novidades</a></li>
+    <li><a href="#contato"><span class="emo" aria-hidden="true">📍</span>Contato</a></li>
+    <li><a class="wa" data-wa="1" href="https://wa.me/5564984022777?text=Ol%C3%A1%2C%20Dr.%20Jean.%20Vim%20pelo%20site." target="_blank" rel="noopener"><span class="emo" aria-hidden="true">💬</span>WhatsApp</a></li>
+  </ul>
+</nav>
+<script>(function () {
+  var BASE = 'https://vscnhldmclffediugevp.supabase.co';
+  var KEY = 'sb_publishable_9w_K1yTHP5Svh1aPhYycGA_KXMEkmXl';
+  var CACHE = 'jm-dados';
+  var $ = function (q) { return document.querySelector(q); };
+  var all = function (q) { return Array.prototype.slice.call(document.querySelectorAll(q)); };
+  var get = function (path) {
+    return fetch(BASE + path, { headers: { apikey: KEY } }).then(function (r) {
+      if (!r.ok) throw new Error('http ' + r.status);
+      return r.json();
+    });
+  };
+  var phone = function (n) {
+    var m = /^55(\d{2})(\d{4,5})(\d{4})$/.exec(n || '');
+    return m ? '(' + m[1] + ') ' + m[2] + '-' + m[3] : (n || '');
+  };
+  var icons = all('#areas .ico').map(function (n) { return n.innerHTML; });
+
+  function apply(d) {
+    var s = d.settings;
+    if (s) {
+      var nt = (s.notice || '').trim();
+      $('#noticeText').textContent = nt;
+      $('#notice').hidden = !nt;
+      if ((s.title || '').trim()) $('#siteName').textContent = s.title.trim();
+      if ((s.intro || '').trim()) $('#siteIntro').textContent = s.intro.trim();
+      var nums = [s.whatsapp1, s.whatsapp2];
+      var q = '?text=' + encodeURIComponent('Olá, Dr. Jean. Vim pelo site.');
+      all('[data-wa]').forEach(function (a) {
+        var n = nums[Number(a.getAttribute('data-wa')) - 1];
+        if (n) { a.href = 'https://wa.me/' + n + q; a.hidden = false; } else { a.hidden = true; }
+      });
+      all('[data-phone]').forEach(function (x) {
+        x.textContent = phone(nums[Number(x.getAttribute('data-phone')) - 1]);
+      });
+      var ph = nums.filter(Boolean).map(phone).join(' · ');
+      if (ph) $('#phones').textContent = ph;
+    }
+
+    if (Array.isArray(d.areas)) {
+      var has = d.areas.length > 0;
+      $('#atuacao').hidden = !has;
+      all('a[href="#atuacao"]').forEach(function (a) {
+        var box = a.closest('li') || a;
+        box.hidden = !has;
+      });
+      if (has) {
+        var ul = $('#areas');
+        ul.replaceChildren();
+        d.areas.forEach(function (a, i) {
+          var li = document.createElement('li');
+          li.className = 'card';
+          var ico = document.createElement('span');
+          ico.className = 'ico';
+          ico.innerHTML = icons.length ? icons[i % icons.length] : '';
+          var h = document.createElement('h3');
+          h.textContent = a.name;
+          var p = document.createElement('p');
+          p.textContent = a.description || '';
+          li.append(ico, h);
+          if (a.description) li.append(p);
+          ul.append(li);
+        });
+      }
+    }
+
+    if (Array.isArray(d.posts) && d.posts.length) {
+      var box = $('#posts');
+      box.replaceChildren();
+      d.posts.forEach(function (p) {
+        var art = document.createElement('article');
+        art.className = 'card news';
+        var tag = document.createElement('span');
+        tag.className = 'tag';
+        tag.textContent = p.featured ? 'Destaque' : (p.category || 'Novidades');
+        var h = document.createElement('h3');
+        h.textContent = p.title;
+        var b = document.createElement('p');
+        b.textContent = p.body;
+        var t = document.createElement('time');
+        t.dateTime = p.created_at;
+        var dt = new Date(p.created_at);
+        t.textContent = isNaN(dt) ? '' : dt.toLocaleDateString('pt-BR');
+        art.append(tag, h, b, t);
+        box.append(art);
+      });
+    }
+  }
+
+  try {
+    var c = JSON.parse(localStorage.getItem(CACHE) || 'null');
+    if (c) apply(c);
+  } catch (e) {}
+
+  Promise.all([
+    get('/rest/v1/site_settings?id=eq.1&select=*'),
+    get('/rest/v1/areas?select=*&order=position.asc,id.asc'),
+    get('/rest/v1/posts?select=*&order=featured.desc,created_at.desc&limit=20')
+  ]).then(function (r) {
+    var d = { settings: r[0][0] || null, areas: r[1], posts: r[2] };
+    apply(d);
+    try { localStorage.setItem(CACHE, JSON.stringify(d)); } catch (e) {}
+  }).catch(function () {});
+})();</script>
+<script>if ('serviceWorker' in navigator) { window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); }); }</script>
+</body>
+</html>

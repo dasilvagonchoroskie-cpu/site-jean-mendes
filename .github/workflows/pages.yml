@@ -1,0 +1,42 @@
+name: Publicar site (GitHub Pages)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Separar só os arquivos do site
+        run: |
+          mkdir _site
+          rsync -a --exclude='.git' --exclude='.github' --exclude='_site' --exclude='tools' --exclude='README.md' ./ _site/
+          touch _site/.nojekyll
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Gerar os ícones do aplicativo
+        run: |
+          pip install pillow
+          python3 tools/gerar-icones.py _site
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deploy
+        uses: actions/deploy-pages@v4
