@@ -1,0 +1,15 @@
+name: Manter o banco acordado
+on:
+  schedule:
+    - cron: "23 11 */2 * *"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  acordar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Consultar o banco
+        run: |
+          curl -fsS "https://vscnhldmclffediugevp.supabase.co/rest/v1/site_settings?id=eq.1&select=id" \
+            -H "apikey: sb_publishable_9w_K1yTHP5Svh1aPhYycGA_KXMEkmXl"

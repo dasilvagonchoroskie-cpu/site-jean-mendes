@@ -69,3 +69,25 @@ for pasta, painel in (("icons", False), ("painel/icons", True)):
     for nome, tam in (("icon-512.png", 512), ("icon-192.png", 192), ("apple-touch-icon.png", 180)):
         grande.resize((tam, tam), Image.LANCZOS).save(os.path.join(destino, nome), optimize=True)
 print("icones gerados em", DEST)
+
+def previa():
+    W, H = 1200, 630
+    base = fundo(W, False).crop((0, 285, W, 285 + H))
+    mask = Image.new("L", (W, H), 0)
+    d = ImageDraw.Draw(mask)
+    d.text((235, 180), "J", font=fonte(190), fill=255, anchor="mm")
+    d.text((235, 425), "M", font=fonte(205), fill=255, anchor="mm")
+    d.text((805, 235), "ADVOGADO", font=fonte(40), fill=255, anchor="mm")
+    d.text((805, 325), "Jean Mendes", font=fonte(84), fill=255, anchor="mm")
+    d.text((805, 415), "OAB-GO 58.257 · Goiatuba (GO)", font=fonte(34), fill=255, anchor="mm")
+    sombra = mask.filter(ImageFilter.GaussianBlur(5)).point(lambda v: int(v * 0.7))
+    desl = Image.new("L", (W, H), 0)
+    desl.paste(sombra, (0, 6))
+    base.paste(Image.new("RGB", (W, H), (1, 18, 22)), (0, 0), desl)
+    base.paste(gradiente_ouro(W).resize((W, H)), (0, 0), mask)
+    ImageDraw.Draw(base).line([(445, 170), (445, 460)], fill=(232, 185, 74), width=3)
+    base.save(os.path.join(DEST, "icons", "og.png"), optimize=True)
+
+
+previa()
+
