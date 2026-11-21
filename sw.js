@@ -1,8 +1,8 @@
 // Service worker: guarda a tela no aparelho para abrir rápido e com internet fraca.
 // Para forçar a atualização depois de mudar a tela, troque o número da VERSAO.
-const VERSAO = 'jm-site-v3';
+const VERSAO = 'jm-site-v4';
 const BASE = new URL('./', self.location).pathname;
-const ARQUIVOS = ['./', 'index.html', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png'];
+const ARQUIVOS = ['./', 'index.html', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'simbolo.webp'];
 
 self.addEventListener('install', function (e) {
   e.waitUntil(caches.open(VERSAO).then(function (c) { return c.addAll(ARQUIVOS); }).then(function () { return self.skipWaiting(); }));

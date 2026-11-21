@@ -1,10 +1,13 @@
-# Gera os ícones do aplicativo (site e painel) para a pasta indicada.
+# Gera os ícones do aplicativo (site e painel) e a prévia do link para a pasta indicada.
+# O ícone é o símbolo do logo (círculo com a coluna), de tools/simbolo.webp.
 # Uso: python3 tools/gerar-icones.py _site
 import os
 import sys
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 DEST = sys.argv[1]
+AQUI = os.path.dirname(os.path.abspath(__file__))
+SIMBOLO = os.path.join(AQUI, "simbolo.webp")
 FONTES = [
     "/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf",
     "/usr/share/fonts/truetype/liberation/LiberationSerif-Bold.ttf",
@@ -46,20 +49,46 @@ def gradiente_ouro(S):
     return g
 
 
+def colar_simbolo(img, largura, cx, cy, sombra=True):
+    """Cola o símbolo do logo (com sombra suave) centrado em (cx, cy)."""
+    sim = Image.open(SIMBOLO).convert("RGBA")
+    altura = round(largura * sim.height / sim.width)
+    sim = sim.resize((largura, altura), Image.LANCZOS)
+    x, y = round(cx - largura / 2), round(cy - altura / 2)
+    if sombra:
+        a = sim.getchannel("A")
+        folga = max(6, largura // 25)
+        tela = Image.new("L", img.size, 0)
+        tela.paste(a, (x, y + folga // 2))
+        tela = tela.filter(ImageFilter.GaussianBlur(folga)).point(lambda v: int(v * 0.65))
+        img.paste(Image.new("RGB", img.size, (1, 18, 22)), (0, 0), tela)
+    img.paste(sim.convert("RGB"), (x, y), sim.getchannel("A"))
+
+
 def icone(S, painel):
     img = fundo(S, painel)
-    letras = Image.new("L", (S, S), 0)
-    d = ImageDraw.Draw(letras)
-    d.text((S / 2, S * 0.27), "J", font=fonte(int(S * 0.46)), fill=255, anchor="mm")
-    d.text((S / 2, S * 0.70), "M", font=fonte(int(S * 0.50)), fill=255, anchor="mm")
-    sombra = letras.filter(ImageFilter.GaussianBlur(S * 0.012)).point(lambda v: int(v * 0.7))
-    deslocada = Image.new("L", (S, S), 0)
-    deslocada.paste(sombra, (0, int(S * 0.018)))
-    img.paste(Image.new("RGB", (S, S), (1, 18, 22)), (0, 0), deslocada)
-    img.paste(gradiente_ouro(S), (0, 0), letras)
+    colar_simbolo(img, int(S * 0.70), S / 2, S * (0.47 if painel else 0.50))
     if painel:
         ImageDraw.Draw(img).rounded_rectangle((S * 0.26, S * 0.90, S * 0.74, S * 0.93), radius=S * 0.015, fill=(232, 185, 74))
     return img
+
+
+def previa():
+    W, H = 1200, 630
+    base = fundo(W, False).crop((0, 285, W, 285 + H))
+    colar_simbolo(base, 400, 250, H / 2)
+    mask = Image.new("L", (W, H), 0)
+    d = ImageDraw.Draw(mask)
+    d.text((850, 235), "ADVOGADO", font=fonte(40), fill=255, anchor="mm")
+    d.text((850, 325), "Jean Mendes", font=fonte(76), fill=255, anchor="mm")
+    d.text((850, 415), "OAB-GO 58.257 · Goiatuba (GO)", font=fonte(30), fill=255, anchor="mm")
+    sombra = mask.filter(ImageFilter.GaussianBlur(5)).point(lambda v: int(v * 0.7))
+    desl = Image.new("L", (W, H), 0)
+    desl.paste(sombra, (0, 6))
+    base.paste(Image.new("RGB", (W, H), (1, 18, 22)), (0, 0), desl)
+    base.paste(gradiente_ouro(W).resize((W, H)), (0, 0), mask)
+    ImageDraw.Draw(base).line([(500, 170), (500, 460)], fill=(232, 185, 74), width=3)
+    base.save(os.path.join(DEST, "icons", "og.png"), optimize=True)
 
 
 for pasta, painel in (("icons", False), ("painel/icons", True)):
@@ -70,24 +99,4 @@ for pasta, painel in (("icons", False), ("painel/icons", True)):
         grande.resize((tam, tam), Image.LANCZOS).save(os.path.join(destino, nome), optimize=True)
 print("icones gerados em", DEST)
 
-def previa():
-    W, H = 1200, 630
-    base = fundo(W, False).crop((0, 285, W, 285 + H))
-    mask = Image.new("L", (W, H), 0)
-    d = ImageDraw.Draw(mask)
-    d.text((235, 180), "J", font=fonte(190), fill=255, anchor="mm")
-    d.text((235, 425), "M", font=fonte(205), fill=255, anchor="mm")
-    d.text((805, 235), "ADVOGADO", font=fonte(40), fill=255, anchor="mm")
-    d.text((805, 325), "Jean Mendes", font=fonte(84), fill=255, anchor="mm")
-    d.text((805, 415), "OAB-GO 58.257 · Goiatuba (GO)", font=fonte(34), fill=255, anchor="mm")
-    sombra = mask.filter(ImageFilter.GaussianBlur(5)).point(lambda v: int(v * 0.7))
-    desl = Image.new("L", (W, H), 0)
-    desl.paste(sombra, (0, 6))
-    base.paste(Image.new("RGB", (W, H), (1, 18, 22)), (0, 0), desl)
-    base.paste(gradiente_ouro(W).resize((W, H)), (0, 0), mask)
-    ImageDraw.Draw(base).line([(445, 170), (445, 460)], fill=(232, 185, 74), width=3)
-    base.save(os.path.join(DEST, "icons", "og.png"), optimize=True)
-
-
 previa()
-
