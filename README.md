@@ -10,4 +10,4 @@
 - No painel, aba **Galeria**: envia várias fotos de uma vez, com legenda, ordem, esconder e apagar. No site aparecem na seção **Trabalhos**.
 - Em cada publicação há o campo **Foto (opcional)**.
 - As fotos são reduzidas no próprio celular (lado maior 1600 px) e ficam no Supabase Storage, bucket público `fotos`. Só quem está na tabela `admins` consegue enviar ou apagar.
-- **Passo único no banco:** rodar `tools/fotos.sql` no SQL Editor do Supabase. Antes disso o site e o painel funcionam normalmente, só a galeria e as fotos ficam desligadas.
+- **Banco (já aplicado no Supabase `jean-mendes-site`):** `tools/fotos.sql` é o registro do que foi criado: tabela `gallery`, coluna `posts.image_url`, bucket `fotos` e as políticas, todas com `is_admin()`. Só precisa rodar de novo num projeto novo. Pode rodar mais de uma vez sem problema.
