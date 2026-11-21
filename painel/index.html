@@ -193,6 +193,13 @@ select option { color: var(--field-ink); background: var(--field); }
 .login .card { width: 100%; text-align: left; }
 .login form { display: flex; flex-direction: column; gap: 16px; }
 
+.btn:disabled { opacity: .45; cursor: default; }
+.thumb { display: block; width: 100%; max-width: 220px; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 12px; border: 1px solid rgba(240, 201, 94, .55); box-shadow: 0 4px 10px rgba(0, 0, 0, .4); background: rgba(2, 31, 36, .6); }
+.prev { display: block; width: 100%; max-width: 320px; border-radius: 12px; border: 1px solid rgba(240, 201, 94, .55); }
+.item.galitem { flex-direction: row; align-items: flex-start; gap: 14px; }
+.galitem .thumb { width: 96px; height: 96px; aspect-ratio: 1 / 1; flex: none; max-width: none; }
+.galbody { display: flex; flex-direction: column; gap: 8px; min-width: 0; flex: 1; }
+.galbody .actions { padding-bottom: 0; gap: 8px; }
 @media (prefers-reduced-motion: reduce) { .btn { transition: none; } }
 </style>
 </head>
@@ -251,6 +258,7 @@ select option { color: var(--field-ink); background: var(--field); }
 
   <ul class="tabs" role="tablist" aria-label="Seções do painel">
     <li role="presentation"><button type="button" class="tab" role="tab" id="tab-pubs" data-tab="pubs" aria-selected="true" aria-controls="panel-pubs">Publicações</button></li>
+    <li role="presentation"><button type="button" class="tab" role="tab" id="tab-gal" data-tab="gal" aria-selected="false" aria-controls="panel-gal">Galeria</button></li>
     <li role="presentation"><button type="button" class="tab" role="tab" id="tab-txt" data-tab="txt" aria-selected="false" aria-controls="panel-txt">Textos do site</button></li>
     <li role="presentation"><button type="button" class="tab" role="tab" id="tab-acc" data-tab="acc" aria-selected="false" aria-controls="panel-acc">Conta</button></li>
   </ul>
@@ -278,6 +286,16 @@ select option { color: var(--field-ink); background: var(--field); }
         <label for="pubText">Texto</label>
         <textarea id="pubText" placeholder="Escreva o que o público vai ler"></textarea>
       </div>
+      <div class="field">
+        <span class="lbl">Foto (opcional)</span>
+        <img id="pubPhotoPrev" class="prev" alt="" hidden>
+        <input type="file" id="pubPhoto" accept="image/*" hidden>
+        <div class="row">
+          <button type="button" class="btn btn-glass btn-small" id="pubPhotoPick">Escolher foto</button>
+          <button type="button" class="btn btn-glass btn-small" id="pubPhotoClear" hidden>Tirar foto</button>
+        </div>
+        <p class="hint">A foto aparece junto da publicação no site. Pode ser tirada na hora.</p>
+      </div>
       <label class="check" for="pubLive"><input type="checkbox" id="pubLive" checked> No ar (aparece no site)</label>
       <label class="check" for="pubFeatured"><input type="checkbox" id="pubFeatured"> Destaque (fica no topo)</label>
       <p class="msg" id="pubMsg" role="status"></p>
@@ -288,6 +306,16 @@ select option { color: var(--field-ink); background: var(--field); }
     </form>
 
     <ul class="list" id="pubList"></ul>
+  </section>
+
+  <!-- Galeria -->
+  <section id="panel-gal" class="card panel" role="tabpanel" aria-labelledby="tab-gal" hidden>
+    <h2>Galeria de trabalhos</h2>
+    <p class="sub">As fotos aparecem no site, na seção “Trabalhos”. Sem nenhuma foto no ar, a seção some.</p>
+    <input type="file" id="galFile" accept="image/*" multiple hidden>
+    <button type="button" class="btn btn-gold" id="galAdd">+ Adicionar fotos</button>
+    <p class="msg" id="galMsg" role="status"></p>
+    <ul class="list" id="galList"></ul>
   </section>
 
   <!-- Textos do site -->
@@ -494,12 +522,12 @@ select option { color: var(--field-ink); background: var(--field); }
   var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
   function showTab(name) {
     tabs.forEach(function (t) { t.setAttribute('aria-selected', t.dataset.tab === name ? 'true' : 'false'); });
-    ['pubs', 'txt', 'acc'].forEach(function (n) { $('#panel-' + n).hidden = (n !== name); });
+    ['pubs', 'gal', 'txt', 'acc'].forEach(function (n) { $('#panel-' + n).hidden = (n !== name); });
   }
   tabs.forEach(function (t) { t.addEventListener('click', function () { showTab(t.dataset.tab); }); });
 
   /* ---------- dados ---------- */
-  var state = { pubs: [], areas: [], editingPub: null, editingArea: null, confirmPub: null, confirmArea: null };
+  var state = { pubs: [], areas: [], gal: [], galOk: true, editingPub: null, editingArea: null, editingGal: null, confirmPub: null, confirmArea: null, confirmGal: null, pubImage: null, pubFile: null, pubImageRemoved: false, pubPrevUrl: null };
 
   function loadPubs() {
     return api('/rest/v1/posts?select=*&order=featured.desc,created_at.desc').then(function (r) { state.pubs = r || []; renderPubs(); });
@@ -521,7 +549,7 @@ select option { color: var(--field-ink); background: var(--field); }
   }
   function loadAll() {
     msg('#appMsg', 'Carregando...');
-    return Promise.all([loadSettings(), loadPubs(), loadAreas()])
+    return Promise.all([loadSettings(), loadPubs(), loadAreas(), loadGallery()])
       .then(function () { msg('#appMsg', ''); })
       .catch(function (e) { msg('#appMsg', oops(e), 'err'); });
   }
@@ -540,6 +568,11 @@ select option { color: var(--field-ink); background: var(--field); }
     }
     state.pubs.forEach(function (p) {
       var li = el('li', 'item');
+      if (p.image_url) {
+        var pim = el('img', 'thumb');
+        pim.src = p.image_url; pim.alt = ''; pim.loading = 'lazy';
+        li.append(pim);
+      }
       li.append(el('h3', null, p.title));
       var badges = el('div', 'badges');
       badges.append(p.live ? badge('No ar', 'on') : badge('Rascunho', 'off'));
@@ -551,7 +584,7 @@ select option { color: var(--field-ink); background: var(--field); }
         act.append(el('span', 'ask', 'Apagar esta publicação?'));
         act.append(button('Sim, apagar', 'btn-danger', function () {
           mut('/rest/v1/posts?id=eq.' + p.id, 'DELETE')
-            .then(function () { state.confirmPub = null; return loadPubs(); })
+            .then(function () { state.confirmPub = null; if (p.image_url) dropPhoto(p.image_url); return loadPubs(); })
             .catch(function (err) { state.confirmPub = null; renderPubs(); msg('#appMsg', oops(err), 'err'); });
         }));
         act.append(button('Cancelar', 'btn-glass', function () { state.confirmPub = null; renderPubs(); }));
@@ -572,11 +605,15 @@ select option { color: var(--field-ink); background: var(--field); }
     $('#pubText').value = p ? p.body : '';
     $('#pubLive').checked = p ? p.live : true;
     $('#pubFeatured').checked = p ? p.featured : false;
+    state.pubImage = p ? (p.image_url || null) : null;
+    state.pubFile = null;
+    state.pubImageRemoved = false;
+    setPubPreview();
     msg('#pubMsg', '');
     $('#pubForm').hidden = false;
     $('#pubTitle').focus();
   }
-  function closePubForm() { $('#pubForm').hidden = true; state.editingPub = null; }
+  function closePubForm() { $('#pubForm').hidden = true; state.editingPub = null; state.pubFile = null; state.pubImage = null; state.pubImageRemoved = false; setPubPreview(); }
 
   $('#newPub').addEventListener('click', function () { openPubForm(null); });
   $('#pubCancel').addEventListener('click', closePubForm);
@@ -587,12 +624,219 @@ select option { color: var(--field-ink); background: var(--field); }
     if (!title) { msg('#pubMsg', 'Escreva um título para a publicação.', 'err'); return; }
     if (!text) { msg('#pubMsg', 'Escreva o texto da publicação.', 'err'); return; }
     var data = { title: title, body: text, category: $('#pubCat').value, live: $('#pubLive').checked, featured: $('#pubFeatured').checked };
-    msg('#pubMsg', 'Salvando...');
-    var req = state.editingPub != null
-      ? mut('/rest/v1/posts?id=eq.' + state.editingPub, 'PATCH', data)
-      : mut('/rest/v1/posts', 'POST', data);
-    req.then(loadPubs).then(function () { msg('#pubMsg', ''); closePubForm(); })
-      .catch(function (err) { msg('#pubMsg', oops(err), 'err'); });
+    var oldImg = state.editingPub != null ? state.pubImage : null;
+    var removed = state.pubImageRemoved;
+    var newUrl = null;
+    var saved = false;
+    var step = Promise.resolve();
+    if (state.pubFile) {
+      step = sendPhoto(state.pubFile).then(function (u) { newUrl = u; data.image_url = u; });
+    } else if (removed) {
+      data.image_url = null;
+    }
+    msg('#pubMsg', state.pubFile ? 'Enviando a foto...' : 'Salvando...');
+    step.then(function () {
+      msg('#pubMsg', 'Salvando...');
+      return state.editingPub != null
+        ? mut('/rest/v1/posts?id=eq.' + state.editingPub, 'PATCH', data)
+        : mut('/rest/v1/posts', 'POST', data);
+    }).then(function () {
+      saved = true;
+      if ((newUrl || removed) && oldImg) dropPhoto(oldImg);
+      return loadPubs();
+    }).then(function () { msg('#pubMsg', ''); closePubForm(); })
+      .catch(function (err) {
+        if (!saved && newUrl) dropPhoto(newUrl);
+        msg('#pubMsg', oopsPhoto(err), 'err');
+      });
+  });
+
+  /* ---------- fotos ---------- */
+  var FOTOS = BASE + '/storage/v1/object/public/fotos/';
+  function fotoPath(url) {
+    var i = url ? url.indexOf('/public/fotos/') : -1;
+    return i < 0 ? null : url.slice(i + 14);
+  }
+  /* reduz a foto do celular (lado maior 1600 px, JPEG) para enviar rápido e gastar pouco espaço */
+  function shrink(file) {
+    return new Promise(function (resolve, reject) {
+      var u = URL.createObjectURL(file);
+      var im = new Image();
+      im.onload = function () {
+        URL.revokeObjectURL(u);
+        var w = im.naturalWidth, h = im.naturalHeight;
+        if (!w || !h) { reject(new Error('foto')); return; }
+        var k = Math.min(1, 1600 / Math.max(w, h));
+        var c = document.createElement('canvas');
+        c.width = Math.round(w * k);
+        c.height = Math.round(h * k);
+        var x = c.getContext('2d');
+        x.fillStyle = '#fff';
+        x.fillRect(0, 0, c.width, c.height);
+        x.drawImage(im, 0, 0, c.width, c.height);
+        c.toBlob(function (b) { if (b) resolve(b); else reject(new Error('foto')); }, 'image/jpeg', 0.82);
+      };
+      im.onerror = function () { URL.revokeObjectURL(u); reject(new Error('foto')); };
+      im.src = u;
+    });
+  }
+  function sendPhoto(blob) {
+    var path = 'f/' + Date.now() + '-' + Math.random().toString(36).slice(2, 8) + '.jpg';
+    var ready = (sess && Date.now() > sess.expires_at) ? refresh() : Promise.resolve();
+    return ready.then(function () {
+      return fetch(BASE + '/storage/v1/object/fotos/' + path, {
+        method: 'POST',
+        headers: { apikey: KEY, Authorization: 'Bearer ' + sess.access_token, 'Content-Type': 'image/jpeg', 'x-upsert': 'false', 'cache-control': 'max-age=31536000' },
+        body: blob
+      });
+    }).then(function (r) {
+      if (!r.ok) { var e = new Error('http ' + r.status); e.status = r.status; e.upload = true; throw e; }
+      return FOTOS + path;
+    });
+  }
+  function dropPhoto(url) {
+    var p = fotoPath(url);
+    if (!p || !sess) return Promise.resolve();
+    return api('/storage/v1/object/fotos/' + p, { method: 'DELETE' }).catch(function () {});
+  }
+  function oopsPhoto(e) {
+    if (e && e.message === 'foto') return 'Não consegui ler essa foto. Tente outra.';
+    if (e && e.upload) {
+      if (e.status === 413) return 'A foto ficou grande demais. Tente outra.';
+      return 'Não consegui enviar a foto. Se for a primeira vez, falta ativar o armazenamento de fotos no banco de dados.';
+    }
+    return oops(e);
+  }
+
+  /* foto da publicação */
+  function setPubPreview() {
+    if (state.pubPrevUrl) { URL.revokeObjectURL(state.pubPrevUrl); state.pubPrevUrl = null; }
+    var src = '';
+    if (state.pubFile) { state.pubPrevUrl = URL.createObjectURL(state.pubFile); src = state.pubPrevUrl; }
+    else if (state.pubImage && !state.pubImageRemoved) src = state.pubImage;
+    var im = $('#pubPhotoPrev');
+    if (src) im.src = src; else im.removeAttribute('src');
+    im.hidden = !src;
+    $('#pubPhotoClear').hidden = !src;
+    $('#pubPhotoPick').textContent = src ? 'Trocar foto' : 'Escolher foto';
+  }
+  $('#pubPhotoPick').addEventListener('click', function () { $('#pubPhoto').click(); });
+  $('#pubPhotoClear').addEventListener('click', function () { state.pubFile = null; state.pubImageRemoved = true; setPubPreview(); });
+  $('#pubPhoto').addEventListener('change', function () {
+    var f = this.files && this.files[0];
+    this.value = '';
+    if (!f) return;
+    msg('#pubMsg', 'Preparando a foto...');
+    shrink(f).then(function (b) {
+      state.pubFile = b;
+      state.pubImageRemoved = false;
+      setPubPreview();
+      msg('#pubMsg', '');
+    }).catch(function (e) { msg('#pubMsg', oopsPhoto(e), 'err'); });
+  });
+
+  /* ---------- galeria de trabalhos ---------- */
+  function loadGallery() {
+    return api('/rest/v1/gallery?select=*&order=position.asc,id.asc')
+      .then(function (r) { state.gal = r || []; state.galOk = true; renderGallery(); })
+      .catch(function (e) {
+        state.gal = []; state.galOk = false; renderGallery();
+        if (e && e.status === 404) msg('#galMsg', 'A galeria ainda não foi ativada no banco de dados. Avise quem cuida do site.', 'err');
+        else msg('#galMsg', oops(e), 'err');
+      });
+  }
+  function moveGal(i, d) {
+    if (!state.gal[i] || !state.gal[i + d]) return;
+    var order = state.gal.slice();
+    var t = order[i]; order[i] = order[i + d]; order[i + d] = t;
+    var jobs = [];
+    order.forEach(function (g, idx) {
+      if (g.position !== idx) jobs.push(mut('/rest/v1/gallery?id=eq.' + g.id, 'PATCH', { position: idx }));
+    });
+    Promise.all(jobs).then(loadGallery).catch(function (err) { msg('#galMsg', oops(err), 'err'); });
+  }
+  function renderGallery() {
+    var list = $('#galList');
+    list.replaceChildren();
+    if (!state.gal.length) {
+      var li0 = el('li', 'item');
+      li0.append(el('p', 'empty', state.galOk ? 'Nenhuma foto ainda. Toque em “+ Adicionar fotos”.' : 'Não foi possível carregar a galeria.'));
+      list.append(li0);
+      return;
+    }
+    state.gal.forEach(function (g, i) {
+      var li = el('li', 'item galitem');
+      var img = el('img', 'thumb');
+      img.src = g.image_url; img.alt = g.caption || ''; img.loading = 'lazy'; img.width = 96; img.height = 96;
+      var box = el('div', 'galbody');
+      var badges = el('div', 'badges');
+      badges.append(g.live ? badge('No ar', 'on') : badge('Escondida', 'off'));
+      box.append(badges);
+      var act = el('div', 'actions');
+      if (state.editingGal === g.id) {
+        var inp = el('input');
+        inp.type = 'text'; inp.maxLength = 120; inp.value = g.caption || ''; inp.placeholder = 'Legenda (opcional)';
+        inp.setAttribute('aria-label', 'Legenda da foto');
+        box.append(inp);
+        act.append(button('Salvar', 'btn-gold', function () {
+          mut('/rest/v1/gallery?id=eq.' + g.id, 'PATCH', { caption: inp.value.trim() })
+            .then(function () { state.editingGal = null; msg('#galMsg', 'Legenda salva.', 'ok'); return loadGallery(); })
+            .catch(function (err) { msg('#galMsg', oops(err), 'err'); });
+        }));
+        act.append(button('Cancelar', 'btn-glass', function () { state.editingGal = null; renderGallery(); }));
+      } else {
+        box.append(el('p', null, g.caption || 'Sem legenda'));
+        if (state.confirmGal === g.id) {
+          act.append(el('span', 'ask', 'Apagar esta foto?'));
+          act.append(button('Sim, apagar', 'btn-danger', function () {
+            mut('/rest/v1/gallery?id=eq.' + g.id, 'DELETE')
+              .then(function () { state.confirmGal = null; dropPhoto(g.image_url); msg('#galMsg', 'Foto apagada.', 'ok'); return loadGallery(); })
+              .catch(function (err) { state.confirmGal = null; renderGallery(); msg('#galMsg', oops(err), 'err'); });
+          }));
+          act.append(button('Cancelar', 'btn-glass', function () { state.confirmGal = null; renderGallery(); }));
+        } else {
+          act.append(button('Legenda', 'btn-glass', function () { state.editingGal = g.id; renderGallery(); }));
+          var up = button('↑', 'btn-glass', function () { moveGal(i, -1); });
+          up.setAttribute('aria-label', 'Subir'); up.disabled = (i === 0);
+          var dn = button('↓', 'btn-glass', function () { moveGal(i, 1); });
+          dn.setAttribute('aria-label', 'Descer'); dn.disabled = (i === state.gal.length - 1);
+          act.append(up, dn);
+          act.append(button(g.live ? 'Esconder' : 'Mostrar', 'btn-glass', function () {
+            mut('/rest/v1/gallery?id=eq.' + g.id, 'PATCH', { live: !g.live })
+              .then(loadGallery)
+              .catch(function (err) { msg('#galMsg', oops(err), 'err'); });
+          }));
+          act.append(button('Apagar', 'btn-danger', function () { state.confirmGal = g.id; renderGallery(); }));
+        }
+      }
+      box.append(act);
+      li.append(img, box);
+      list.append(li);
+    });
+  }
+  $('#galAdd').addEventListener('click', function () { $('#galFile').click(); });
+  $('#galFile').addEventListener('change', function () {
+    var files = Array.prototype.slice.call(this.files || []);
+    this.value = '';
+    if (!files.length) return;
+    var ok = 0, fails = 0, lastErr = null;
+    var pos = state.gal.length ? Math.max.apply(null, state.gal.map(function (g) { return g.position; })) + 1 : 0;
+    $('#galAdd').disabled = true;
+    files.reduce(function (chain, f, i) {
+      return chain.then(function () {
+        msg('#galMsg', 'Enviando foto ' + (i + 1) + ' de ' + files.length + '...');
+        return shrink(f).then(sendPhoto).then(function (url) {
+          return mut('/rest/v1/gallery', 'POST', { image_url: url, caption: '', position: pos++, live: true })
+            .catch(function (e) { dropPhoto(url); throw e; });
+        }).then(function () { ok++; }).catch(function (e) { fails++; lastErr = e; });
+      });
+    }, Promise.resolve()).then(function () {
+      $('#galAdd').disabled = false;
+      return loadGallery();
+    }).then(function () {
+      if (!fails) msg('#galMsg', ok === 1 ? 'Foto adicionada. Já aparece no site.' : ok + ' fotos adicionadas. Já aparecem no site.', 'ok');
+      else msg('#galMsg', (ok ? ok + ' enviada(s), ' : '') + fails + ' com problema. ' + oopsPhoto(lastErr), 'err');
+    });
   });
 
   /* ---------- áreas de atuação ---------- */
