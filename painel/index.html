@@ -312,11 +312,11 @@ select option { color: var(--field-ink); background: var(--field); }
     </div>
     <div class="field">
       <label for="txtWa1">WhatsApp principal (só números, com 55 e DDD)</label>
-      <input type="text" id="txtWa1" inputmode="numeric" value="5564984022777">
+      <input type="text" id="txtWa1" inputmode="numeric" value="5564981272777">
     </div>
     <div class="field">
       <label for="txtWa2">Segundo WhatsApp (opcional)</label>
-      <input type="text" id="txtWa2" inputmode="numeric" value="5564981272777">
+      <input type="text" id="txtWa2" inputmode="numeric" value="5564984022777">
     </div>
 
     <div class="field">
@@ -674,7 +674,7 @@ select option { color: var(--field-ink); background: var(--field); }
     $('#txtWa2').value = wa2;
     if (!$('#txtTitle').value.trim()) { msg('#txtMsg', 'O nome em destaque não pode ficar vazio.', 'err'); return; }
     if ($('#txtHours').value.trim().length > 300) { msg('#txtMsg', 'O horário de atendimento está muito longo. Use no máximo 300 letras.', 'err'); return; }
-    if (!waOk(wa1)) { msg('#txtMsg', 'O WhatsApp principal precisa ter só números, começando com 55 e o DDD. Exemplo: 5564984022777.', 'err'); return; }
+    if (!waOk(wa1)) { msg('#txtMsg', 'O WhatsApp principal precisa ter só números, começando com 55 e o DDD. Exemplo: 5564981272777.', 'err'); return; }
     if (wa2 && !waOk(wa2)) { msg('#txtMsg', 'O segundo WhatsApp precisa ter só números, começando com 55 e o DDD, ou ficar vazio.', 'err'); return; }
     msg('#txtMsg', 'Salvando...');
     mut('/rest/v1/site_settings?id=eq.1', 'PATCH', {
