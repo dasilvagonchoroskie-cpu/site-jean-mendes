@@ -272,7 +272,7 @@ select option { color: var(--field-ink); background: var(--field); }
     <form id="pubForm" class="inner" hidden novalidate>
       <h3 id="pubFormTitle">Nova publicação</h3>
       <div class="field">
-        <label for="pubTitle">Título</label>
+        <label for="pubTitle">Título (opcional)</label>
         <input type="text" id="pubTitle" placeholder="Ex.: Novo horário de atendimento">
       </div>
       <div class="field">
@@ -573,7 +573,7 @@ select option { color: var(--field-ink); background: var(--field); }
         pim.src = p.image_url; pim.alt = ''; pim.loading = 'lazy';
         li.append(pim);
       }
-      li.append(el('h3', null, p.title));
+      li.append(el('h3', null, p.title || (p.body ? p.body.slice(0, 60) : 'Publicação só com foto')));
       var badges = el('div', 'badges');
       badges.append(p.live ? badge('No ar', 'on') : badge('Rascunho', 'off'));
       if (p.featured) badges.append(badge('Destaque', 'star'));
@@ -621,9 +621,8 @@ select option { color: var(--field-ink); background: var(--field); }
     e.preventDefault();
     var title = $('#pubTitle').value.trim();
     var text = $('#pubText').value.trim();
-    if (!title) { msg('#pubMsg', 'Escreva um título para a publicação.', 'err'); return; }
     var temFoto = !!state.pubFile || (!!state.pubImage && !state.pubImageRemoved);
-    if (!text && !temFoto) { msg('#pubMsg', 'Escreva um texto ou escolha uma foto.', 'err'); return; }
+    if (!title && !text && !temFoto) { msg('#pubMsg', 'Escreva um título, um texto ou escolha uma foto.', 'err'); return; }
     var data = { title: title, body: text, category: $('#pubCat').value, live: $('#pubLive').checked, featured: $('#pubFeatured').checked };
     var oldImg = state.editingPub != null ? state.pubImage : null;
     var removed = state.pubImageRemoved;

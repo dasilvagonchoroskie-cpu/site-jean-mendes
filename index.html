@@ -549,7 +549,8 @@ footer strong { color: var(--gold-hi); font-weight: 600; }
           pi.loading = 'lazy';
           art.append(pi);
         }
-        art.append(tag, h);
+        art.append(tag);
+        if ((p.title || '').trim()) art.append(h);
         if (p.body) art.append(b);
         art.append(t);
         box.append(art);
