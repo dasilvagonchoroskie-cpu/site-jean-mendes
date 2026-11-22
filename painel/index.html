@@ -590,7 +590,13 @@ select option { color: var(--field-ink); background: var(--field); }
           mut('/rest/v1/posts?id=eq.' + p.id, 'DELETE')
             .then(function () { state.confirmPub = null; return p.image_url ? dropPhoto(p.image_url) : null; })
             .then(function () { return loadPubs(); })
-            .catch(function (err) { state.confirmPub = null; renderPubs(); msg('#appMsg', oops(err), 'err'); });
+            .catch(function (err) {
+              state.confirmPub = null;
+              /* se a publicação já tinha sido apagada (lista velha), só atualiza a lista; erro só se ela ainda existir */
+              return loadPubs().then(function () {
+                if (state.pubs.some(function (x) { return x.id === p.id; })) msg('#appMsg', oops(err), 'err');
+              }).catch(function () { msg('#appMsg', oops(err), 'err'); });
+            });
         }));
         act.append(button('Cancelar', 'btn-glass', function () { state.confirmPub = null; renderPubs(); }));
       } else {
@@ -805,7 +811,12 @@ select option { color: var(--field-ink); background: var(--field); }
             mut('/rest/v1/gallery?id=eq.' + g.id, 'DELETE')
               .then(function () { state.confirmGal = null; return dropPhoto(g.image_url); })
               .then(function () { msg('#galMsg', 'Foto apagada.', 'ok'); return loadGallery(); })
-              .catch(function (err) { state.confirmGal = null; renderGallery(); msg('#galMsg', oops(err), 'err'); });
+              .catch(function (err) {
+                state.confirmGal = null;
+                return loadGallery().then(function () {
+                  if (state.gal.some(function (x) { return x.id === g.id; })) msg('#galMsg', oops(err), 'err');
+                }).catch(function () { msg('#galMsg', oops(err), 'err'); });
+              });
           }));
           act.append(button('Cancelar', 'btn-glass', function () { state.confirmGal = null; renderGallery(); }));
         } else {
