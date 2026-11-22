@@ -283,7 +283,7 @@ select option { color: var(--field-ink); background: var(--field); }
         </select>
       </div>
       <div class="field">
-        <label for="pubText">Texto</label>
+        <label for="pubText">Texto (opcional)</label>
         <textarea id="pubText" placeholder="Escreva o que o público vai ler"></textarea>
       </div>
       <div class="field">
@@ -622,7 +622,8 @@ select option { color: var(--field-ink); background: var(--field); }
     var title = $('#pubTitle').value.trim();
     var text = $('#pubText').value.trim();
     if (!title) { msg('#pubMsg', 'Escreva um título para a publicação.', 'err'); return; }
-    if (!text) { msg('#pubMsg', 'Escreva o texto da publicação.', 'err'); return; }
+    var temFoto = !!state.pubFile || (!!state.pubImage && !state.pubImageRemoved);
+    if (!text && !temFoto) { msg('#pubMsg', 'Escreva um texto ou escolha uma foto.', 'err'); return; }
     var data = { title: title, body: text, category: $('#pubCat').value, live: $('#pubLive').checked, featured: $('#pubFeatured').checked };
     var oldImg = state.editingPub != null ? state.pubImage : null;
     var removed = state.pubImageRemoved;
