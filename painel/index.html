@@ -647,7 +647,7 @@ select option { color: var(--field-ink); background: var(--field); }
         : mut('/rest/v1/posts', 'POST', data);
     }).then(function () {
       saved = true;
-      return ((newUrl || removed) && oldImg ? dropPhoto(oldImg) : null).then(function () { return loadPubs(); });
+      return Promise.resolve((newUrl || removed) && oldImg ? dropPhoto(oldImg) : null).then(function () { return loadPubs(); });
     }).then(function () { msg('#pubMsg', ''); closePubForm(); })
       .catch(function (err) {
         if (!saved && newUrl) dropPhoto(newUrl);
