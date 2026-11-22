@@ -24,7 +24,8 @@
 <title>Jean Mendes Advogado</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Inter:wght@400;500;600&family=Playfair+Display:wght@700;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Inter:wght@400;500;600&family=Playfair+Display:wght@700;900&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Inter:wght@400;500;600&family=Playfair+Display:wght@700;900&display=swap"></noscript>
 <style>
 /* Concept: turquoise silk waves with gold metal ribbons; gold letters, buttons and card edges carry bevel and depth, like the business card art. Single committed dark look. */
 :root {
@@ -43,8 +44,13 @@
   --gold-grad: linear-gradient(180deg, #fff3b8 0%, #f6d56a 28%, #c58a22 52%, #f4d578 72%, #8c5c10 100%);
   color-scheme: dark;
 }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; min-height: 100%; }
 body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  /* sem repetir: enquanto a página carrega, o fundo não vira listras */
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
   background-color: var(--teal-deep);
   background-image:
     radial-gradient(120% 55% at 15% 0%, rgba(31, 224, 224, .42), transparent 60%),

@@ -46,6 +46,10 @@
 }
 * { box-sizing: border-box; }
 body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
   background-color: var(--teal-deep);
   background-image:
     radial-gradient(120% 55% at 15% 0%, rgba(31, 224, 224, .38), transparent 60%),
@@ -550,7 +554,7 @@ select option { color: var(--field-ink); background: var(--field); }
   function loadAll() {
     msg('#appMsg', 'Carregando...');
     return Promise.all([loadSettings(), loadPubs(), loadAreas(), loadGallery()])
-      .then(function () { msg('#appMsg', ''); })
+      .then(function () { msg('#appMsg', ''); sweepPhotos(); })
       .catch(function (e) { msg('#appMsg', oops(e), 'err'); });
   }
 
@@ -584,7 +588,8 @@ select option { color: var(--field-ink); background: var(--field); }
         act.append(el('span', 'ask', 'Apagar esta publicação?'));
         act.append(button('Sim, apagar', 'btn-danger', function () {
           mut('/rest/v1/posts?id=eq.' + p.id, 'DELETE')
-            .then(function () { state.confirmPub = null; if (p.image_url) dropPhoto(p.image_url); return loadPubs(); })
+            .then(function () { state.confirmPub = null; return p.image_url ? dropPhoto(p.image_url) : null; })
+            .then(function () { return loadPubs(); })
             .catch(function (err) { state.confirmPub = null; renderPubs(); msg('#appMsg', oops(err), 'err'); });
         }));
         act.append(button('Cancelar', 'btn-glass', function () { state.confirmPub = null; renderPubs(); }));
@@ -642,8 +647,7 @@ select option { color: var(--field-ink); background: var(--field); }
         : mut('/rest/v1/posts', 'POST', data);
     }).then(function () {
       saved = true;
-      if ((newUrl || removed) && oldImg) dropPhoto(oldImg);
-      return loadPubs();
+      return ((newUrl || removed) && oldImg ? dropPhoto(oldImg) : null).then(function () { return loadPubs(); });
     }).then(function () { msg('#pubMsg', ''); closePubForm(); })
       .catch(function (err) {
         if (!saved && newUrl) dropPhoto(newUrl);
@@ -694,10 +698,19 @@ select option { color: var(--field-ink); background: var(--field); }
       return FOTOS + path;
     });
   }
+  /* apaga a foto no Supabase: primeiro pela função limpar-fotos (confere no servidor que ninguém mais usa a foto);
+     se falhar, tenta apagar direto; se falhar de novo, a varredura de sweepPhotos() pega depois */
   function dropPhoto(url) {
     var p = fotoPath(url);
     if (!p || !sess) return Promise.resolve();
-    return api('/storage/v1/object/fotos/' + p, { method: 'DELETE' }).catch(function () {});
+    return api('/functions/v1/limpar-fotos', { method: 'POST', body: { paths: [p] } })
+      .catch(function () { return api('/storage/v1/object/fotos/' + p, { method: 'DELETE' }); })
+      .catch(function () {});
+  }
+  /* varredura: apaga do Supabase qualquer foto que não está em nenhuma publicação nem na galeria */
+  function sweepPhotos() {
+    if (!sess) return Promise.resolve();
+    return api('/functions/v1/limpar-fotos', { method: 'POST', body: {} }).catch(function () {});
   }
   function oopsPhoto(e) {
     if (e && e.message === 'foto') return 'Não consegui ler essa foto. Tente outra.';
@@ -790,7 +803,8 @@ select option { color: var(--field-ink); background: var(--field); }
           act.append(el('span', 'ask', 'Apagar esta foto?'));
           act.append(button('Sim, apagar', 'btn-danger', function () {
             mut('/rest/v1/gallery?id=eq.' + g.id, 'DELETE')
-              .then(function () { state.confirmGal = null; dropPhoto(g.image_url); msg('#galMsg', 'Foto apagada.', 'ok'); return loadGallery(); })
+              .then(function () { state.confirmGal = null; return dropPhoto(g.image_url); })
+              .then(function () { msg('#galMsg', 'Foto apagada.', 'ok'); return loadGallery(); })
               .catch(function (err) { state.confirmGal = null; renderGallery(); msg('#galMsg', oops(err), 'err'); });
           }));
           act.append(button('Cancelar', 'btn-glass', function () { state.confirmGal = null; renderGallery(); }));

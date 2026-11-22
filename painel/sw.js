@@ -1,6 +1,6 @@
 // Service worker: guarda a tela no aparelho para abrir rápido e com internet fraca.
 // Para forçar a atualização depois de mudar a tela, troque o número da VERSAO.
-const VERSAO = 'jm-painel-v7';
+const VERSAO = 'jm-painel-v8';
 const BASE = new URL('./', self.location).pathname;
 const ARQUIVOS = ['./', 'index.html', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'simbolo.webp'];
 
